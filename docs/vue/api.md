@@ -4,7 +4,7 @@ The API classes are ways to integrate your Vue SPA with Laravel's APIs in an Lar
 ## Instantiating Axios
 You need to pass your `Axios` instance to the package as so:
 
-```js{9}
+```js{2,9}
 import axios, { AxiosInstance } from 'axios'
 import { createHttp } from '@konnec/vue-eloquent'
 
@@ -18,7 +18,7 @@ createHttp({ httpClient: http })
 
 You now have access to the `Axios` instance from your application
 
-This will append an `api` prefix to all requests to the `baseUrl`. You can customize the api prefix while through the 
+This will append an `api` prefix to all requests to the `baseUrl`. You can customize the api prefix through the 
 `createHttp` method:
 
 ```js
@@ -28,12 +28,12 @@ createHttp({
 })
 ```
 
-## Generating Api Class
+## Generating the Api Class
 Create a new file called `PostApi.ts` which extends `Api`. Define your api endpoint through the `resource` property:
 
 **Example**
 
-```js{4}
+```js{1,4}
 import { Api } from '@konnec/vue-eloquent'
 
 export default class PostApi extends Api {
@@ -45,8 +45,8 @@ export default class PostApi extends Api {
 }
 ```
 
-In this example, your accessing your `posts` endpoint through:
-```txt
+In this example, you are accessing your `posts` endpoint through:
+```http
 http://localhost:8000/api/posts
 ```
 
@@ -54,7 +54,7 @@ http://localhost:8000/api/posts
 You can now access your laravel `Posts` API through the following methods
 
 ```js
-PostApi.find(1)
+PostApi.show(1)
 
 PostApi.get()
 
@@ -62,7 +62,7 @@ PostApi.store({text: 'My New Post})
     
 PostApi.update({id: 1, text: 'My New Post - Updated})
         
-PostApi.delete(1) OR PostApi.delete({id: 1, text: 'My New Post - Updated})
+PostApi.destroy(1) OR PostApi.destroy({id: 1, text: 'My New Post - Updated})
 ```
 
 ### Mass Updates
@@ -105,7 +105,7 @@ Route::post('posts/batch', [PostController::class, 'storeBatch']);
 Route::patch('posts/batch', [PostController::class, 'updateBatch']);
 Route::patch('posts/batch-destroy', [PostController::class, 'destroyBatch']);
 ```
-Note that the `batch-destroy` route is defined as `PATCH` instead of `DELETE` as it does not accept any parameters
+Note that the `batch-destroy` route is defined as `PATCH` instead of `DELETE`.
 
 ## Casting Dates
 All default laravel timestamps (`created_at`, `updated_at` and `deleted_at`) attributes are automatically converted 

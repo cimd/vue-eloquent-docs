@@ -14,7 +14,7 @@ This package comprises two packages:
 @konnec/vue-eloquent
 ```
 2. A Laravel package:
-```js
+```php
 konnec/vue-eloquent-api
 ```
 

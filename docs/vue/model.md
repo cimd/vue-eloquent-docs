@@ -1,6 +1,6 @@
 # Model
 
-Models allows you to connect your laravel models with your front end forms.
+`Model` classes allows you to connect your laravel models with your front end forms.
 
 ## Generating Model Classes
 Create a `Post` model that extends the default `Model` class. Note we're using the `PostApi` created previously.
@@ -25,14 +25,19 @@ export default class Post extends Model {
     updated_at: undefined,
   } as IPost)
 
-  constructor(post?: any){
+  constructor(post?: IPost){
     super()
     this.factory(post)
   }
 }
 ```
 
-And now you can use it in our component:
+::: tip
+Notice the `model` attribute is a reactive property. This allows
+you to maintain reactivity in your components
+:::
+
+You `model` property is where you encapsulate your model attributes. And now you can use it in our component:
 
 ```js{3-5,11,16,21-22}
 <template>
@@ -86,21 +91,21 @@ this.post.create()
 this.post.update()
 ```
 
-Alternatively, you can also use the convenient `post.save()`. If your `post.model` has a defined `id` attribute, it will send a `PATCH` to the update to update it. Otherwise, 
+Alternatively, you can also use the convenient `post.save()` method. If your `post.model` has a defined `id` attribute, it will send a `PATCH` request to the API to update it. Otherwise, 
 it will send a `POST` request to create a new `post`
 ```js
 this.post.save()
 ```
 
-You can **delete** the existing post by calling
+You can **delete** the existing post by calling:
 ```js
 this.post.delete()
 ```
 
 ::: tip
-The **API** methods connect to Laravel controllers and hence use the same terminology: `get`, `show`, `store`, `update`, `delete`
+The **API Class** methods connect to Laravel controllers and hence use the same terminology: `get`(`index`), `show`, `store`, `update`, `destroy`
 
-The **Model** methods connect to Laravel Models, hence use Laravel Eloquent's terminology: 
+The **Model Class** methods connect to Laravel Models, hence use Laravel Eloquent's terminology: 
 `create`, `find`, `update`, `delete`, `save`
 :::
 
@@ -121,7 +126,7 @@ You can pass default values directly to the model property:
 
 ## Refreshing Models
 
-If you already have an instance of a model taht was retrived from the API, you can "refresh" the model using the
+If you already have an instance of a model that was retrieved from the API, you can "refresh" the model using the
 `refresh` method.
 
 ```js
@@ -129,7 +134,7 @@ this.post.find(1)
 
 this.post.refresh()
 ```
-Or you can call the `fresh` method to re-retrive a new model from the API:
+Or you can call the `fresh` method to re-retrieve a new model from the API:
 
 ```js
 this.post.find(1)
@@ -137,6 +142,102 @@ this.post.find(1)
 this.post.fresh(2)
 ```
 
+## Relationships
+
+You can create `hasOne` and `hasMany` relationships on your model:
+
+```js
+import { reactive } from 'vue'
+import { Model } from '../../src'
+import PostApi from './PostApi'
+import { IPost } from './PostInterface'
+import UserApi from './UserApi'
+import { IUser } from './UserInterface'
+import CommentApi from './CommentApi'
+import { IComment } from './CommentInterface'
+
+export default class Post extends Model {
+    protected api = PostApi
+
+    public model = reactive({
+        id: undefined,
+        created_at: undefined,
+        updated_at: undefined,
+        deleted_at: undefined,
+        author_id: undefined,
+        title: undefined,
+        text: undefined,
+        author: undefined as IUser,
+        comments: undefined as IComment[],
+    } as IPost)
+
+    constructor(post?: IPost) {
+        super()
+        this.factory(post)
+        super.initValidations()
+    }
+    
+    async author(): Promise<IUser>
+    {
+        return await this.hasOne(UserApi, this.model.author_id)
+    }
+    
+    async comments(): Promise<IComment[]>
+    {
+        return await this.hasMany(CommentApi, 'id', this.model.id)
+    }
+}
+
+```
+
+### Has One Relationship
+
+On a `hasOne` relationship, the first parameter is the `Api` Class
+of your relationship, and the second parameter is the `foreign key`
+on your relationship model
+
+```js
+async author(): Promise<IUser>
+{
+    return await this.hasOne(UserApi, this.model.author_id)
+}
+```
+
+### Has Many Relationship
+
+On a `hasMany` relationship, the first parameter is the `Api` Class
+of your relationship. Second parameter is the `primary key` on the 
+relationship model. The third parameter is the `foreign key` on your relationship model
+
+```js
+async comments(): Promise<IComment[]>
+{
+    return await this.hasMany(CommentApi, 'id', this.model.id)
+}
+```
+
+::: tip
+The inverse relationships methods are not available but can be
+abstracted using the same `hasOne` and `hasMany` methods.
+:::
+
+### Eager Loading
+
+The relationships can be 'eager loaded' by passing the `with` method
+while creating the model instance:
+
+```js
+this.posts.with(['author', 'comments']).find(1)
+```
+
+### Lazy Loading
+
+The relationships can be 'lazy loaded' by calling the `load` method
+after the model has been instantiated:
+
+```js
+this.posts.load(['author', 'comments'])
+```
 
 ## Validation
 `Vue Eloquent` uses [Vuelidate](https://vuelidate-next.netlify.app/) which is a great model validation library for 
@@ -161,7 +262,7 @@ export default class Post extends Model {
     updated_at: undefined,
   } as IPost)
 
-  constructor(post?: any){
+  constructor(post?: IPost){
     super()
     this.factory(post)
     super.initValidations()
@@ -179,6 +280,10 @@ export default class Post extends Model {
   }))
 }
 ```
+
+::: warning
+Note the `validations` property is a computed property
+:::
 
 You then need to initialize the validations in your component.
 From there on you can access your `Vuelidate` model through `this.post.$model`
@@ -229,22 +334,29 @@ export default defineComponent({
             v-model='post.model.title' 
             label='Title' 
             :error='post.$model.title.$error' 
-            :error-message='post.$model.title.$errorMessage'
+            :error-message='post.$model.title.$errors[0]'
         />
         <q-input 
             v-model='post.model.description' 
             label='Description'
             :error='post.$model.description.$error' 
-            :error-message='post.$model.description.$errorMessage'
+            :error-message='post.$model.description.$errors[0]'
         />
         <q-btn label='Submit' @click='onSubmit />
     </div>
 </template>
 ```
 
+### Validation Rules
+
+You can find several rules available out-of-the-box in the 
+[ Vuelidate Built-in Validators ](https://vuelidate-next.netlify.app/validators.html)
+documentation and also on how to create your own custom rules 
+[ Vuelidate Custom Validators ](https://vuelidate-next.netlify.app/custom_validators.html).
+
 ## States
 The `Model` has 3 states which are available and updated during the API requests. You can use them to display
-state changes on you UI, e.g. a `loading` indicator on a button
+state changes on you UI, e.g. a `loading` indicator on a button.
 
 ```js
 state: {
@@ -276,7 +388,7 @@ state: {
 ```
 
 ## Observers
-Similarly to the API class, the Model also has Observers
+Similarly to the API class, the Model also has Observers:
 
 **Find**: `retriving` and `retrieved`
 

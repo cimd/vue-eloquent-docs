@@ -1,7 +1,11 @@
 # Collection
 
-While the `Model` class provides an eloquent way to manage a single Model,
-the `Collection` class provides way of managing a collection (array) of models.
+While the `Model` class provides an eloquent way to manage a **single Model**,
+the `Collection` class provides way of managing a **collection (array) of models**.
+
+That is a difference from the *Laravel way* because on the front end
+you would typically have different components for handling a single
+`Model` or a `Collection` of models.
 
 ## Create a Collection Class
 Create a `PostCollection` class that extends the default `Collection` class. Note we're using the `PostApi` 
@@ -51,6 +55,37 @@ export default defineComponent({
 })
 </script>
 ```
+
+## Eloquent Api
+
+### Filtering
+
+```js
+// Chaining several where clauses
+this.posts.where({ author_id: 1 }).where({ title: 'Tech' }).get()
+
+// OR, passing multiple parameters to single where clause
+this.posts.where({ author_id: 1, title: 'Tech' }).get()
+```
+
+### Relationships
+
+Requesting both `author` and `comments` relationships to be added to the response.
+
+```js
+this.posts.with(['author', 'comments']).get()
+```
+
+### Sorting
+
+Sorting `author_id` ascending.
+
+```js
+this.posts.sort(['author_id']).get()
+```
+::: warning
+Sorting in `descending` order is not supported yet.
+:::
 
 ## States
 The `Collection` has 3 states which are available and updated during the API requests. You can use them to display
@@ -127,32 +162,3 @@ this.initBroadcast('posts')
 `broadcastUpdated(e: any)`
 
 `broadcastDeleted(e: any)`
-
-## Eloquent Api
-
-### Filtering
-
-```js
-this.posts.where({ author_id: 1 }).where({ title: 'Tech' }).get()
-OR
-this.posts.where({ author_id: 1, title: 'Tech' }).get()
-```
-
-### Relationships
-
-Requesting both `author` and `comments` relationships to be added to the response.
-
-```js
-this.posts.with(['author', 'comments']).get()
-```
-
-### Sorting
-
-Sorting both `author_id` ascending.
-
-```js
-this.posts.sort(['author_id']).get()
-```
-::: warning
-Sorting in `descending` order is not supported yet
-:::

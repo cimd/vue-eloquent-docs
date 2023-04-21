@@ -1,9 +1,9 @@
 # Installation
 
-This page demonstrates some of the built-in markdown extensions provided by VitePress.
+Installing the package in your Vue 3.
 
 
-```js
+```sh
 yarn add @konnec/vue-eloquent
 ```
 

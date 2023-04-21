@@ -46,7 +46,7 @@ namespace Konnec\VueEloquentApi\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Konnec\VueEloquentApi\Models\Post;
+use App\Models\Post;
 
 class PostController extends Controller
 {

@@ -1,10 +1,9 @@
 # Installation
 
-This page demonstrates some of the built-in markdown extensions provided by VitePress.
+Installing the package in `Laravel`.
 
-
-```php
-composer required konnec/vue-eloquent-api
+```sh
+composer require konnec/vue-eloquent-api
 ```
 
 ## Vue 3

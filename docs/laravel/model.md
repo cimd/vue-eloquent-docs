@@ -1,7 +1,7 @@
 # Model
 
-## EloquentAPI Trait
-You should use the EloquentApi trait on your model
+## EloquentApi Trait
+You should use the `EloquentApi` trait on your model:
 
 **Example**
 
@@ -59,7 +59,7 @@ select * from posts where title like %Tech%
 ```
 
 ### Custom Filters
-You can create your own custom filters by extending the Filter interface.
+You can create your own custom filters by extending the `Filter` interface.
 The example below allows you to filter through the `Posts` Author relationship where all `authors` in id range
 
 ```php
@@ -89,7 +89,7 @@ class WhereHasAuthorIn implements Filter
 
 Then you would call out this filter in your model like this:
 
-```js
+```php
     protected array $filters = [
         'author' => WhereHasAuthorIn::class,
     ];
