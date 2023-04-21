@@ -1,7 +1,36 @@
 {
+  "name": "@konnec/vue-eloquent-docs",
+  "version": "0.2.0",
+  "description": "An interface for Vue and Laravel Eloquent through API",
   "scripts": {
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs"
-  }
+  },
+  "devDependencies": {
+    "typescript": "^5.0.4",
+    "vite": "^4.1.4",
+    "vitepress": "^1.0.0-alpha.71"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/cimd/vue-eloquent-docs.git"
+  },
+  "keywords": [
+    "Vue",
+    "Laravel",
+    "Api",
+    "Eloquent",
+    "Model",
+    "Validation",
+    "Broadcast",
+    "Vuelidate",
+    "Echo"
+  ],
+  "author": "Christian D'Aquino",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cimd/vue-eloquent-docs/issues"
+  },
+  "homepage": "https://github.com/cimd/vue-eloquent-docs#readme"
 }
