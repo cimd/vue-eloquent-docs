@@ -22,4 +22,4 @@ Installation and usage or both packages are described in these docs. They can be
 
 ## Architecture
 
-![Architecture](./public/architecture.png)
+![Architecture](/architecture.png)
