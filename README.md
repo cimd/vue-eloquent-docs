@@ -1,4 +1,4 @@
-<img alt="Vue Eloquent" src="https://raw.githubusercontent.com/cimd/vue-eloquent/main/public/banner.png" />
+<img alt="Vue Eloquent" src="https://raw.githubusercontent.com/cimd/vue-eloquent/main/docs/public/banner.png" />
 
 An interface for Vue 3 an Laravel Eloquent models through API requests.
 
