@@ -2,6 +2,8 @@
 
 `Model` classes allows you to connect your laravel models with your front end forms.
 
+![Model Class](/model-class.png)
+
 ## Generating Model Classes
 Create a `Post` model that extends the default `Model` class. Note we're using the `PostApi` created previously.
 
@@ -76,27 +78,33 @@ Note that we're linking `post.model` properties to the form models
 
 ## Available methods
 
+### Find
+
 This will **fetch** the `post` with id = 1 from the API and attach it to the `post.model` property
 ```js
 this.post.find(1)
 ```
 
+### Create
 **Create** a new instance of the post
 ```js
 this.post.create()
 ```
 
+### Update
 **Update** the existing instance of the post
 ```js
 this.post.update()
 ```
 
+### Save
 Alternatively, you can also use the convenient `post.save()` method. If your `post.model` has a defined `id` attribute, it will send a `PATCH` request to the API to update it. Otherwise, 
 it will send a `POST` request to create a new `post`
 ```js
 this.post.save()
 ```
 
+### Delete
 You can **delete** the existing post by calling:
 ```js
 this.post.delete()
@@ -130,14 +138,18 @@ If you already have an instance of a model that was retrieved from the API, you 
 `refresh` method.
 
 ```js
+// Retrieve model with id = 1
 this.post.find(1)
 
+// Updates model with id = 1 from the API
 this.post.refresh()
 ```
 You can also call the `refresh` method to re-retrieve a new model from the API:
 
 ```js
+// Retrieve model with id = 1
 this.post.find(1)
+
 // post instance is not using model with id = 2
 this.post.refresh(2)
 ```
@@ -145,6 +157,7 @@ this.post.refresh(2)
 If you want to create a fresh (empty declaration) of the model you can call the `fresh` method:
 
 ```js
+// Retrieve model with id = 1
 this.post.find(1)
 // post.model.id = 1
 
@@ -156,7 +169,7 @@ this.post.fresh()
 
 You can create `hasOne` and `hasMany` relationships on your model:
 
-```js
+```js{21-22,30-33,35-38}
 import { reactive } from 'vue'
 import { Model } from '../../src'
 import PostApi from './PostApi'
@@ -184,7 +197,6 @@ export default class Post extends Model {
     constructor(post?: IPost) {
         super()
         this.factory(post)
-        super.initValidations()
     }
     
     async author(): Promise<IUser>
@@ -206,7 +218,7 @@ On a `hasOne` relationship, the first parameter is the `Api` Class
 of your relationship, and the second parameter is the `foreign key`
 on your relationship model
 
-```js
+```ts
 async author(): Promise<IUser>
 {
     return await this.hasOne(UserApi, this.model.author_id)
@@ -408,7 +420,44 @@ Similarly to the API class, the Model also has Observers:
 
 **Delete**: `deleting` and `deleted`
 
-Those are good placeholders for displaying error messages to the user, or passing values to the Store
+Those are good placeholders for displaying error messages to the user, passing values to the Store, or mutating the data:
+
+```ts{29-33}
+import { required } from '@vuelidate/validators'
+import { computed, reactive } from 'vue'
+import { Model } from '../src/index'
+import PostApi from './PostApi'
+import { IPost } from './PostInterface'
+import UserApi from '../test/mocks/UserApi'
+import { IUser } from '../test/mocks/UserInterface'
+
+export default class Post extends Model {
+  protected api = PostApi
+
+  public model = reactive({
+    id: undefined,
+    created_at: undefined,
+    updated_at: undefined,
+    deleted_at: undefined,
+    author_id: undefined,
+    title: undefined,
+    description: undefined,
+    author: undefined as IUser,
+    readers: undefined as IUser[],
+  } as IPost)
+    
+  constructor(post?: IPost) {
+    super()
+    this.factory(post)
+  }
+
+  protected updating()
+  {
+    // strip html tags from this.model.text
+    // before submitting to the backend
+  }
+}
+```
 
 ::: tip
 The `save` method will trigger the `Create` or `Update` observers accordingly

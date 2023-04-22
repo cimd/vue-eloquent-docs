@@ -1,6 +1,6 @@
 # Roadmap
 
-[ ] **Filtering**: Update api to match JSON API specification
+[ ] **Filtering**: Update API to match JSON API specification
 
 [ ] **Sorting**: Implement sorting in descending order
 
@@ -9,3 +9,5 @@
 [ ] **Eloquent Methods**: Implement additional eloquent methods: *firstOrCreate*, *findOrFail*, etc.
 
 [ ] **Tests**: Create tests for all functionality
+
+[ ] **Scaffolding**: Create scaffolding CLI for creating classes
