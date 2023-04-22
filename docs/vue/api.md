@@ -142,7 +142,7 @@ application:
 
 **Store**: `storing`, `stored` and `errorStoring`
 
-**Delete**: `deleting`, `deleted` and `errorDeleting`
+**Destroy**: `destryoing`, `destroyed` and `errorDestroying`
 
 Those are good placeholders for displaying error messages to the user, or passing values to the `stores`.
 
