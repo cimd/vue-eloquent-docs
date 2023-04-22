@@ -41,6 +41,11 @@ export default defineConfig({
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/cimd/vue-eloquent' }
-    ]
+    ],
+  },
+  markdown: {
+    config: (md) => {
+      md.use(require('markdown-it-task-lists'))
+    }
   }
 })
