@@ -10,12 +10,12 @@
 
 This package comprises two packages:
 1. A Vue 3 package:
-```js
-@konnec/vue-eloquent
+```sh
+yarn add @konnec/vue-eloquent
 ```
 2. A Laravel package:
-```php
-konnec/vue-eloquent-api
+```sh
+composer require konnec/vue-eloquent-api
 ```
 
 Installation and usage or both packages are described in these docs. They can be used together or individually
