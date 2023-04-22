@@ -10,10 +10,13 @@
 
 This package comprises two packages:
 1. A Vue 3 package:
+
 ```sh
 yarn add @konnec/vue-eloquent
 ```
+
 2. A Laravel package:
+
 ```sh
 composer require konnec/vue-eloquent-api
 ```
