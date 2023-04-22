@@ -1,5 +1,7 @@
 # API Class
-The API classes are ways to integrate your Vue SPA with Laravel's APIs in an Laravel/Eloquent way
+The API classes are ways to integrate your Vue SPA with Laravel's APIs in an Laravel/Eloquent way.
+
+![Api Class](/api-class.png)
 
 ## Instantiating Axios
 You need to pass your `Axios` instance to the package as so:
@@ -54,9 +56,9 @@ http://localhost:8000/api/posts
 You can now access your laravel `Posts` API through the following methods
 
 ```js
-PostApi.show(1)
-
 PostApi.get()
+
+PostApi.show(1)
 
 PostApi.store({text: 'My New Post})
     
@@ -69,7 +71,7 @@ PostApi.destroy(1) OR PostApi.destroy({id: 1, text: 'My New Post - Updated})
 
 You can perform mass assignments through the following methods:
 
-**batchStore**
+#### batchStore
 ```js
 const posts = [
     { title: 'My New Post', description: 'Lorem ipsum dolor sit amet, consectetur adipis' },
@@ -78,7 +80,7 @@ const posts = [
 PostApi.batchStore(posts)
 ```
 
-**batchUpdate**
+#### batchUpdate
 ```js
 const posts = [
     { id: 1, title: 'My New Post - UPDATED', description: 'Lorem ipsum dolor sit amet, consectetur adipis' },
@@ -87,7 +89,7 @@ const posts = [
 PostApi.batchUpdate(posts)
 ```
 
-**batchDestroy**
+#### batchDestroy
 ```js
 const posts = [
     { id: 1, title: 'My New Post - UPDATED', description: 'Lorem ipsum dolor sit amet, consectetur adipis' },

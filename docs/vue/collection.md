@@ -7,6 +7,8 @@ That is a difference from the *Laravel way* because on the front end
 you would typically have different components for handling a single
 `Model` or a `Collection` of models.
 
+![Collection Class](/collection-class.png)
+
 ## Create a Collection Class
 Create a `PostCollection` class that extends the default `Collection` class. Note we're using the `PostApi` 
 created previously.
@@ -23,10 +25,6 @@ export default class PostCollection extends Collection {
   protected api = PostApi
 
   public data = reactive([] as IPost[])
-
-  public filter = reactive({
-    creator_id: undefined as number | undefined,
-  })
 
   constructor(posts?: IPost[]){
     super()
@@ -105,6 +103,20 @@ state: {
 name on your Collection you have to initialize the broadcasting on your
 component.
 
+Firstly you need to pass your `Laravel Echo` instance to the package:
+```ts
+import { createBroadcast } from '@konnec/vue-eloquent'
+import Echo from 'laravel-echo'
+
+const broadcast: Echo = ((<any>window).Echo = new Echo({
+// your configuration here
+}))
+    
+createBroadcast(broadcast)
+```
+
+Then you need to define the channel name on your collection class
+
 ```js{9}
 import { Collection } from '@konnec/vue-eloquent'
 import PostApi from './PostApi'
@@ -163,3 +175,31 @@ this.initBroadcast('posts')
 
 `broadcastDeleted(e: any)`
 
+Broadcast Observers are a good place to subscribe to broadcast events and update your `Collection` accordingly.
+
+```ts{18-23}
+import { reactive } from 'vue'
+import { Collection } from '../src/index'
+import PostApi from './PostApi'
+import { IPost } from './PostInterface'
+
+export default class PostsCollection extends Collection {
+  protected api = PostApi
+
+  protected channel = 'posts'
+
+  public data = reactive([] as IPost[])
+
+  constructor(posts?: IPost[]){
+    super()
+    this.factory(posts)
+  }
+
+  protected async broadcastCreated(e: any): Promise<{ data: IPost }>
+  {
+    // add new post to the collection
+    const newPost = await this.api.show(e.id)
+    this.data.push(newPost)
+  }
+}
+```

@@ -30,7 +30,7 @@ If you're going to use mass assignments, you need to create its routes first:
 Route::post('posts/batch', [PostController::class, 'storeBatch']);
 Route::patch('posts/batch', [PostController::class, 'updateBatch']);
 Route::patch('posts/batch-destroy', [PostController::class, 'destroyBatch']);
-Route::apiResource('loadout-lists', PostController::class);
+Route::apiResource('posts', PostController::class);
 ```
 
 ::: warning

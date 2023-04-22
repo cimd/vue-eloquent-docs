@@ -1,6 +1,6 @@
 # Installation
 
-Installing the package in your Vue 3.
+Installing the package in your Vue 3 app.
 
 
 ```sh
