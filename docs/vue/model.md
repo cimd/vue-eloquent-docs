@@ -134,12 +134,22 @@ this.post.find(1)
 
 this.post.refresh()
 ```
-Or you can call the `fresh` method to re-retrieve a new model from the API:
+You can also call the `refresh` method to re-retrieve a new model from the API:
 
 ```js
 this.post.find(1)
+// post instance is not using model with id = 2
+this.post.refresh(2)
+```
 
-this.post.fresh(2)
+If you want to create a fresh (empty declaration) of the model you can call the `fresh` method:
+
+```js
+this.post.find(1)
+// post.model.id = 1
+
+this.post.fresh()
+// post.model.id = undefined
 ```
 
 ## Relationships
