@@ -8,6 +8,5 @@
 /dataSources.local.xml
 
 /inspectionProfiles
-modules.xml
-vcs.xml
-vue-eloquent-docs.iml
+*.xml
+*.iml
