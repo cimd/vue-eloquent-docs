@@ -34,6 +34,7 @@ export default defineConfig({
           { text: 'API Class', link: '/vue/api' },
           { text: 'Model', link: '/vue/model' },
           { text: 'Collection', link: '/vue/collection' },
+          { text: 'DevTools', link: '/vue/devtools' },
           { text: 'Examples', link: '/vue/examples' },
         ]
       }
