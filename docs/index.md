@@ -18,5 +18,7 @@ features:
     details: Abstract your business logic out of your pages and into model classes
   - title: Model Validation
     details: Easily validate models before submitting forms
+  - title: DevTools Plugin
+    details: Inspect Models and Collections using Vue DevTools
 ---
 
