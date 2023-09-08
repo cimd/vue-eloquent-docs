@@ -4,7 +4,7 @@
 
 ### Api Class
 
-```js
+```ts
 import { Api } from '../../src/index'
 
 export default class PostApi extends Api {
@@ -25,7 +25,7 @@ export default class PostApi extends Api {
 
 ### Model
 
-```js
+```ts
 import { required } from '@vuelidate/validators'
 import { computed, reactive } from 'vue'
 import { Model } from '../../src'
@@ -82,7 +82,7 @@ export default class Post extends Model {
 
 ### Collection
 
-```js
+```ts
 import { reactive } from 'vue'
 import { Collection } from '../../src/index'
 import PostApi from './PostApi'
@@ -106,7 +106,7 @@ export default class PostsCollection extends Collection {
 
 ### Form Component
 
-```js
+```vue
 <template>
   <q-card style='width:400px;max-width:100%; '>
     <q-card-section class='bg-primary'>
@@ -171,7 +171,7 @@ export default defineComponent({
 
 ### Collection Component
 
-```js
+```vue
 <template>
   <q-page>
 
