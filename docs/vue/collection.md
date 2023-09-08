@@ -15,7 +15,7 @@ created previously.
 
 **Example**
 
-```js
+```ts
 import { Collection } from '@konnec/vue-eloquent'
 import PostApi from './PostApi'
 import { IPost } from './IPost'
@@ -28,14 +28,14 @@ export default class PostCollection extends Collection {
 
   constructor(posts?: IPost[]){
     super()
-    this.factory(posts)
+    super.factory(posts)
   }
 }
 ```
 
 You can then access the collection from the `data` attribute.
 
-```js{2,7,13}
+```ts{2,7,13}
 <script lang="ts">
 import PostsCollection from './Post'
 
@@ -89,7 +89,7 @@ Sorting in `descending` order is not supported yet.
 The `Collection` has 3 states which are available and updated during the API requests. You can use them to display
 state changes on you UI, e.g. a `loading` indicator on a button
 
-```js
+```ts
 state: {
     isLoading: boolean,
     isSucess: boolean,
@@ -117,7 +117,7 @@ createBroadcast(broadcast)
 
 Then you need to define the channel name on your collection class
 
-```js{9}
+```ts{9}
 import { Collection } from '@konnec/vue-eloquent'
 import PostApi from './PostApi'
 import { IPost } from './IPost'
@@ -136,12 +136,12 @@ export default class PostCollection extends Collection {
     
     constructor(posts?: IPost[]){
     super()
-    this.factory(posts)
+    super.factory(posts)
     }
 }
 ```
 
-```js{11}
+```ts{11}
 <script lang="ts">
 import PostsCollection from './Post'
 
@@ -192,7 +192,7 @@ export default class PostsCollection extends Collection {
 
   constructor(posts?: IPost[]){
     super()
-    this.factory(posts)
+    super.factory(posts)
   }
 
   protected async broadcastCreated(e: any): Promise<{ data: IPost }>

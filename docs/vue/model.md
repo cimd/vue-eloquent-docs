@@ -9,7 +9,7 @@ Create a `Post` model that extends the default `Model` class. Note we're using t
 
 **Example**
 
-```js
+```ts
 import { Model } from '@konnec/vue-eloquent'
 import PostApi from './PostApi'
 import { IPost } from 'PostInterface'
@@ -29,7 +29,7 @@ export default class Post extends Model {
 
   constructor(post?: IPost){
     super()
-    this.factory(post)
+    super.factory(post)
   }
 }
 ```
@@ -121,8 +121,8 @@ The **Model Class** methods connect to Laravel Models, hence use Laravel Eloquen
 
 You can pass default values directly to the model property:
 
-```js
-  public model = reactive({
+```ts
+  model = reactive({
     id: undefined,
     title: 'Default Title',
     description: undefined,
@@ -169,7 +169,7 @@ this.post.fresh()
 
 You can create `hasOne` and `hasMany` relationships on your model:
 
-```js{21-22,30-33,35-38}
+```ts{21-22,30-33,35-38}
 import { reactive } from 'vue'
 import { Model } from '../../src'
 import PostApi from './PostApi'
@@ -196,7 +196,7 @@ export default class Post extends Model {
 
     constructor(post?: IPost) {
         super()
-        this.factory(post)
+        super.factory(post)
     }
     
     async author(): Promise<IUser>
@@ -231,7 +231,7 @@ On a `hasMany` relationship, the first parameter is the `Api` Class
 of your relationship. Second parameter is the `primary key` on the 
 relationship model. The third parameter is the `foreign key` on your relationship model
 
-```js
+```ts
 async comments(): Promise<IComment[]>
 {
     return await this.hasMany(CommentApi, 'id', this.model.id)
@@ -265,7 +265,7 @@ this.posts.load(['author', 'comments'])
 `Vue Eloquent` uses [Vuelidate](https://vuelidate-next.netlify.app/) which is a great model validation library for 
 Vue.
 You need to define the validation rules in your Model class:
-```js{1,22,25-34}
+```ts{1,22,25-34}
 import { required } from '@vuelidate/validators'
 import { Model } from '@konnec/vue-eloquent'
 import PostApi from './PostApi'
@@ -286,7 +286,7 @@ export default class Post extends Model {
 
   constructor(post?: IPost){
     super()
-    this.factory(post)
+    super.factory(post)
     super.initValidations()
   }
 
@@ -448,7 +448,7 @@ export default class Post extends Model {
     
   constructor(post?: IPost) {
     super()
-    this.factory(post)
+    super.factory(post)
   }
 
   protected updating()
