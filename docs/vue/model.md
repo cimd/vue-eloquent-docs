@@ -412,13 +412,13 @@ state: {
 ## Observers
 Similarly to the API class, the Model also has Observers:
 
-**Find**: `retriving` and `retrieved`
+**Find**: `retriving()` and `retrieved(payload)`
 
-**Update**: `updating` and `updated`
+**Update**: `updating()` and `updated(payload)`
 
-**Create**: `storing` and `stored`
+**Create**: `storing()` and `stored(payload)`
 
-**Delete**: `deleting` and `deleted`
+**Delete**: `deleting()` and `deleted(payload)`
 
 Those are good placeholders for displaying error messages to the user, passing values to the Store, or mutating the data:
 
@@ -455,6 +455,13 @@ export default class Post extends Model {
   {
     // strip html tags from this.model.text
     // before submitting to the backend
+    // OR
+    // modifying a update_by field with the current username 
+  }
+  
+  protected updated(payload)
+  {
+    // Update a store with the returned payload
   }
 }
 ```

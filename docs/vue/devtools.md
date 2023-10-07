@@ -7,8 +7,8 @@ import { VueEloquentPlugin } from '@konnec/vue-eloquent'
 app.use(VueEloquentPlugin)
 ```
 
-Models and Collections
+## Models and Collections
 <img src="https://raw.githubusercontent.com/cimd/vue-eloquent-docs/main/docs/public/devtools-1.png">
 
-Timeline
+## Timeline
 <img src="https://raw.githubusercontent.com/cimd/vue-eloquent-docs/main/docs/public/devtools-2.png">
