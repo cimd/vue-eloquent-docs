@@ -8,12 +8,13 @@
     "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
-    "@types/node": "^18.15.13",
+    "@types/node": "^20.8.3",
     "markdown-it-task-lists": "^2.1.1",
-    "typescript": "^5.0.4",
-    "vite": "^4.1.4",
-    "vitepress": "^1.0.0-alpha.71"
+    "typescript": "^5.2.2",
+    "vite": "^4.4.11",
+    "vitepress": "^1.0.0-rc.20"
   },
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/cimd/vue-eloquent-docs.git"

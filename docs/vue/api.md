@@ -109,6 +109,33 @@ Route::patch('posts/batch-destroy', [PostController::class, 'destroyBatch']);
 ```
 Note that the `batch-destroy` route is defined as `PATCH` instead of `DELETE`.
 
+## API Query
+Check the Laravel's konnec/vue-eloquent-api package documention on how to configure the 
+controllers for the below queries below 
+
+### Filtering
+```js
+PostApi.where({author: 'John Doe', age: 32}).get()
+// You can also chain methods
+PostApi.where({author: 'John Doe'}).where({ age: 32}).get()
+```
+### Relationships
+```js
+// Requesting both `author` and `comments` relationships to be added to the response.
+PostApi.with(['author', 'comments']).get()
+```
+
+### Attributes
+```js
+// Views attribute will be added to the response
+PostApi.append(['views']).get()
+```
+### Select
+```js
+// Requesting only post id and title from the API
+PostApi.select(['id', 'title']).get()
+```
+
 ## Casting Dates
 All default laravel timestamps (`created_at`, `updated_at` and `deleted_at`) attributes are automatically converted 
 to `Date` objects. You can extend additional attributes by overriding the `dates` property. Dot notation is supported

@@ -23,11 +23,15 @@ import { reactive } from 'vue'
 
 export default class PostCollection extends Collection {
   protected api = PostApi
-
-  public data = reactive([] as IPost[])
+    
+  // Note that data should be a reactive array
+  data = reactive([] as IPost[])
 
   constructor(posts?: IPost[]){
     super()
+      
+    // The factory method is only required if you choose to create an instance
+    // from an existing IPost array
     super.factory(posts)
   }
 }
@@ -42,7 +46,7 @@ import PostsCollection from './Post'
 export default defineComponent({
   data() {
     return {
-      posts: new PostsCollection(),
+      posts: new PostCollection(),
     }
   },
   created: {
@@ -68,17 +72,26 @@ this.posts.where({ author_id: 1, title: 'Tech' }).get()
 
 ### Relationships
 
-Requesting both `author` and `comments` relationships to be added to the response.
-
 ```js
+// Requesting both `author` and `comments` relationships to be added to the response.
 this.posts.with(['author', 'comments']).get()
 ```
 
-### Sorting
-
-Sorting `author_id` ascending.
-
+### Attributes
 ```js
+// Views attribute will be added to the response
+this.posts.append(['views']).get()
+```
+
+### Select
+```js
+// Requesting only post id and title from the API
+this.posts.select(['id', 'title']).get()
+```
+
+### Sorting
+```js
+// Sorting `author_id` ascending.
 this.posts.sort(['author_id']).get()
 ```
 ::: warning

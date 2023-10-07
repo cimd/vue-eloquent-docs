@@ -1,4 +1,5 @@
 import {defineConfig} from 'vitepress'
+import markdownItTaskLists from 'markdown-it-task-lists'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -46,7 +47,7 @@ export default defineConfig({
   },
   markdown: {
     config: (md) => {
-      md.use(require('markdown-it-task-lists'))
+      md.use(markdownItTaskLists)
     }
   }
 })
