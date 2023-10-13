@@ -275,7 +275,8 @@ import { computed, reactive } from 'vue'
 export default class Post extends Model {
   protected api = PostApi
 
-  public model = reactive({
+  // MUST be a reactive property
+  model = reactive({
     id: undefined,
     title: undefined,
     description: undefined,
@@ -286,10 +287,14 @@ export default class Post extends Model {
 
   constructor(post?: IPost){
     super()
-    super.factory(post)
+    if (post) super.factory(post)
+    
+    // Create validation instance
     super.initValidations()
   }
-
+  
+  // Validation rules, as per Vuelidate methods
+  // MUST be a computed property
   protected validations = computed(() => ({
     model: {
       title: {
@@ -328,9 +333,6 @@ export default defineComponent({
     return {
       post: new Post(),
     }
-  },
-  created() {
-    this.model.initValidations()
   },
   methods: {
     async onSubmit() {
