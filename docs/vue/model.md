@@ -18,14 +18,14 @@ import { computed, reactive } from 'vue'
 export default class Post extends Model {
   protected api = PostApi
 
-  public model = reactive({
+  public model = reactive<IPost>({
     id: undefined,
     title: undefined,
     description: undefined,
     created_at: undefined,
     deleted_at: undefined,
     updated_at: undefined,
-  } as IPost)
+  })
 
   constructor(post?: IPost){
     super()
@@ -122,14 +122,14 @@ The **Model Class** methods connect to Laravel Models, hence use Laravel Eloquen
 You can pass default values directly to the model property:
 
 ```ts
-  model = reactive({
+  model = reactive<IPost>({
     id: undefined,
     title: 'Default Title',
     description: undefined,
     created_at: undefined,
     deleted_at: undefined,
     updated_at: undefined,
-  } as IPost)
+  })
 ```
 
 ## Refreshing Models
@@ -182,7 +182,7 @@ import { IComment } from './CommentInterface'
 export default class Post extends Model {
     protected api = PostApi
 
-    public model = reactive({
+    public model = reactive<IPost>({
         id: undefined,
         created_at: undefined,
         updated_at: undefined,
@@ -192,7 +192,7 @@ export default class Post extends Model {
         text: undefined,
         author: undefined as IUser,
         comments: undefined as IComment[],
-    } as IPost)
+    })
 
     constructor(post?: IPost) {
         super()
@@ -265,7 +265,7 @@ this.posts.load(['author', 'comments'])
 `Vue Eloquent` uses [Vuelidate](https://vuelidate-next.netlify.app/) which is a great model validation library for 
 Vue.
 You need to define the validation rules in your Model class:
-```ts{1,22,25-34}
+```ts{1,25,30-39}
 import { required } from '@vuelidate/validators'
 import { Model } from '@konnec/vue-eloquent'
 import PostApi from './PostApi'
@@ -315,7 +315,7 @@ Note the `validations` property is a computed property
 You then need to initialize the validations in your component.
 From there on you can access your `Vuelidate` model through `this.post.$model`
 
-```js{3-6,11,16,20,24-25}
+```js{3-6,11,16,21-22}
 <template>
     <div>
         <q-input v-model='post.model.id' label='ID' />
@@ -424,7 +424,7 @@ Similarly to the API class, the Model also has Observers:
 
 Those are good placeholders for displaying error messages to the user, passing values to the Store, or mutating the data:
 
-```ts{29-33}
+```ts{29-35,37-40}
 import { required } from '@vuelidate/validators'
 import { computed, reactive } from 'vue'
 import { Model } from '../src/index'

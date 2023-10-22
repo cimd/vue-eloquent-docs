@@ -25,7 +25,7 @@ export default class PostCollection extends Collection {
   protected api = PostApi
     
   // Note that data should be a reactive array
-  data = reactive([] as IPost[])
+  data = reactive<IPost[]>([])
 
   constructor(posts?: IPost[]){
     super()
@@ -39,7 +39,7 @@ export default class PostCollection extends Collection {
 
 You can then access the collection from the `data` attribute.
 
-```ts{2,7,13}
+```vue{2,7,13}
 <script lang="ts">
 import PostsCollection from './Post'
 
@@ -62,7 +62,7 @@ export default defineComponent({
 
 ### Filtering
 
-```js
+```ts
 // Chaining several where clauses
 this.posts.where({ author_id: 1 }).where({ title: 'Tech' }).get()
 
@@ -72,31 +72,32 @@ this.posts.where({ author_id: 1, title: 'Tech' }).get()
 
 ### Relationships
 
-```js
+```ts
 // Requesting both `author` and `comments` relationships to be added to the response.
 this.posts.with(['author', 'comments']).get()
 ```
 
 ### Attributes
-```js
+```ts
 // Views attribute will be added to the response
 this.posts.append(['views']).get()
 ```
 
 ### Select
-```js
+```ts
 // Requesting only post id and title from the API
 this.posts.select(['id', 'title']).get()
 ```
 
 ### Sorting
-```js
+```ts
 // Sorting `author_id` ascending.
 this.posts.sort(['author_id']).get()
+
+// OR
+// Sorting `author_id` ascending and then title in descending order.
+this.posts.sort(['+author_id','-title']).get()
 ```
-::: warning
-Sorting in `descending` order is not supported yet.
-:::
 
 ## States
 The `Collection` has 3 states which are available and updated during the API requests. You can use them to display
@@ -141,7 +142,7 @@ export default class PostCollection extends Collection {
     
     protected channel = 'posts'
     
-    public data = reactive([] as IPost[])
+    public data = reactive<IPost[]>([])
     
     public filter = reactive({
     creator_id: undefined as number | undefined,
@@ -154,7 +155,7 @@ export default class PostCollection extends Collection {
 }
 ```
 
-```ts{11}
+```vue{11}
 <script lang="ts">
 import PostsCollection from './Post'
 
@@ -175,7 +176,7 @@ export default defineComponent({
 ```
 
 Alternatively you can pass a new channel directly to the broadcast constructor:
-```js
+```ts
 this.initBroadcast('posts')
 ```
 
@@ -201,7 +202,7 @@ export default class PostsCollection extends Collection {
 
   protected channel = 'posts'
 
-  public data = reactive([] as IPost[])
+  public data = reactive<IPost[]>([])
 
   constructor(posts?: IPost[]){
     super()

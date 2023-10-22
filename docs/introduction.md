@@ -15,11 +15,11 @@ the UI based on the data received from the Container component. This pattern pro
 and reusability of presentation components across different Container components. By separating concerns, 
 developers can create maintainable and scalable code.
 
-This library provides that for you and using a well-designed and polished API used in Laravel.
+This library provides that for you, and using a similar well-designed and polished API from Laravel.
 
 The basic concept is that of a `Model` and a `Collection` of models. Data and component state is managed 
-automatically, and CRUD is built-in. A classic example would be a *posts* list, where each post would be a 
-model and the list of posts would be a collection.
+automatically, and CRUD is built-in. A classic example would be a `posts` list, where each `post` would be a 
+`model` and the list of `posts` would be a `collection`.
 
 
 ### Objectives
