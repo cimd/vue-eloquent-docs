@@ -103,6 +103,10 @@ This requires your backend application to implement the required routes as per b
 into a data param sent:
 :::
 ```php
+Route::batch('posts/batch', PostController::class);
+
+// OR
+
 Route::post('posts/batch', [PostController::class, 'storeBatch']);
 Route::patch('posts/batch', [PostController::class, 'updateBatch']);
 Route::patch('posts/batch-destroy', [PostController::class, 'destroyBatch']);
@@ -114,24 +118,24 @@ Check the Laravel's konnec/vue-eloquent-api package documention on how to config
 controllers for the below queries below 
 
 ### Filtering
-```js
+```ts
 PostApi.where({author: 'John Doe', age: 32}).get()
 // You can also chain methods
 PostApi.where({author: 'John Doe'}).where({ age: 32}).get()
 ```
 ### Relationships
-```js
+```ts
 // Requesting both `author` and `comments` relationships to be added to the response.
 PostApi.with(['author', 'comments']).get()
 ```
 
 ### Attributes
-```js
+```ts
 // Views attribute will be added to the response
 PostApi.append(['views']).get()
 ```
 ### Select
-```js
+```ts
 // Requesting only post id and title from the API
 PostApi.select(['id', 'title']).get()
 ```
@@ -140,7 +144,7 @@ PostApi.select(['id', 'title']).get()
 All default laravel timestamps (`created_at`, `updated_at` and `deleted_at`) attributes are automatically converted 
 to `Date` objects. You can extend additional attributes by overriding the `dates` property. Dot notation is supported
 
-```js{5-11}
+```ts{5-11}
 import { Api } from '@konnec/vue-eloquent'
 
 export default class PostApi extends Api {
@@ -176,7 +180,7 @@ application:
 Those are good placeholders for displaying error messages to the user, or passing values to the `stores`.
 
 **Example**
-```js{2,11-13}
+```ts{2,11-13}
 import { Api } from '@konnec/vue-eloquent'
 import { usePostStore } from 'stores/Post'
 
@@ -198,7 +202,7 @@ export default class PostApi extends Api {
 You can also create a custom class which extends the default `Api` class.
 
 **Example**
-```js
+```ts
 import { Api } from '@konnec/vue-eloquent'
 
 export default abstract class MyApi extends Api {
