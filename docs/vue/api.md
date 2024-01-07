@@ -143,6 +143,7 @@ PostApi.select(['id', 'title']).get()
 ### Paginate
 ```ts
 // Set Page number and page size
+// Default pageSize = 15
 PostApi.paginate({ page: 2, pageSize: 5 }).get()
 ```
 
