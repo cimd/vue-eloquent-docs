@@ -140,6 +140,12 @@ PostApi.append(['views']).get()
 PostApi.select(['id', 'title']).get()
 ```
 
+### Paginate
+```ts
+// Set Page number and page size
+PostApi.paginate({ page: 2, pageSize: 5 }).get()
+```
+
 ## Casting Dates
 All default laravel timestamps (`created_at`, `updated_at` and `deleted_at`) attributes are automatically converted 
 to `Date` objects. You can extend additional attributes by overriding the `dates` property. Dot notation is supported
