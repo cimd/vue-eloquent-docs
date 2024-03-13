@@ -8,11 +8,11 @@
     "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
-    "@types/node": "^20.11.24",
+    "@types/node": "^20.11.26",
     "markdown-it-task-lists": "^2.1.1",
-    "typescript": "^5.3.3",
-    "vite": "^5.1.4",
-    "vitepress": "^1.0.0-rc.44"
+    "typescript": "^5.4.2",
+    "vite": "^5.1.6",
+    "vitepress": "^1.0.0-rc.45"
   },
   "type": "module",
   "repository": {
