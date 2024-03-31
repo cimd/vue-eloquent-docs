@@ -35,7 +35,7 @@ import {
   watchEffect
 } from "./chunk-CKQ4TNQ3.js";
 
-// node_modules/vue-demi/lib/index.mjs
+// node_modules/vitepress/lib/vue-demi.mjs
 var isVue2 = false;
 var isVue3 = true;
 function set(target, key, val) {
@@ -9088,4 +9088,13 @@ export {
   watchWithFilter,
   whenever
 };
+/*! Bundled license information:
+
+vitepress/lib/vue-demi.mjs:
+  (**
+   * vue-demi v0.14.7
+   * Copyright (c) 2020-present, Anthony Fu
+   * @license MIT
+   *)
+*/
 //# sourceMappingURL=vitepress___@vueuse_core.js.map
