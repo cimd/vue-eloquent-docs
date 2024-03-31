@@ -4,7 +4,7 @@
 
 ## Define Model Policy
 
-```ts{1,25,30-39}
+```ts{2,10-11,26-31}
 import { required } from '@vuelidate/validators'
 import { Model, Policy } from '@konnec/vue-eloquent'
 import PostApi from './PostApi'
