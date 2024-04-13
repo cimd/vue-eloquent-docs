@@ -16,9 +16,9 @@ import { IPost } from 'PostInterface'
 import { computed, reactive } from 'vue'
 
 export default class Post extends Model {
-  protected api = PostApi
+  api = PostApi
 
-  public model = reactive<IPost>({
+  model = reactive<IPost>({
     id: undefined,
     title: undefined,
     description: undefined,
@@ -180,9 +180,9 @@ import CommentApi from './CommentApi'
 import { IComment } from './CommentInterface'
 
 export default class Post extends Model {
-    protected api = PostApi
+    api = PostApi
 
-    public model = reactive<IPost>({
+    model = reactive<IPost>({
         id: undefined,
         created_at: undefined,
         updated_at: undefined,
@@ -273,7 +273,7 @@ import { IPost } from 'PostInterface'
 import { computed, reactive } from 'vue'
 
 export default class Post extends Model {
-  protected api = PostApi
+  api = PostApi
 
   // MUST be a reactive property
   model = reactive({
@@ -434,9 +434,9 @@ import UserApi from '../test/mocks/UserApi'
 import { IUser } from '../test/mocks/UserInterface'
 
 export default class Post extends Model {
-  protected api = PostApi
+  api = PostApi
 
-  public model = reactive({
+  model = reactive({
     id: undefined,
     created_at: undefined,
     updated_at: undefined,

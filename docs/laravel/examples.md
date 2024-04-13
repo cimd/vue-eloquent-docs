@@ -66,9 +66,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('posts/batch', [PostController::class, 'storeBatch']);
-Route::patch('posts/batch', [PostController::class, 'updateBatch']);
-Route::patch('posts/batch-destroy', [PostController::class, 'destroyBatch']);
+Route::batch('posts', PostController::class);
 Route::apiResource('posts', PostController::class);
 ```
 
@@ -101,19 +99,6 @@ class PostController extends Controller
         ];
     }
 
-    public function storeBatch(Request $request): array
-    {
-        $result = [];
-        foreach ($request->data as $item) {
-            $line = $this->store(new Request($item));
-            array_push($result, $line['data']);
-        }
-
-        return [
-            'data' => $result,
-        ];
-    }
-
     public function show(Post $post): array
     {
         return [
@@ -130,38 +115,12 @@ class PostController extends Controller
         ];
     }
 
-    public function updateBatch(Request $request): array
-    {
-        $result = [];
-        foreach ($request->data as $item) {
-            $line = $this->update(new Request($item), $item['id']);
-            array_push($result, $line['data']);
-        }
-
-        return [
-            'data' => $result,
-        ];
-    }
-
     public function destroy(Post $post): array
     {
         $post->delete();
 
         return [
             'data' => $post->toArray(),
-        ];
-    }
-    
-    public function destroyBatch(Request $request): array
-    {
-        $result = [];
-        foreach ($request->data as $item) {
-            $line = $this->destroy(new Request($item), $item['id']);
-            array_push($result, $line['data']);
-        }
-
-        return [
-            'data' => $result,
         ];
     }
 }
