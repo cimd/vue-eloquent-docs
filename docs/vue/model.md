@@ -242,14 +242,6 @@ The inverse relationships methods are not available but can be
 abstracted using the same `hasOne` and `hasMany` methods.
 :::
 
-### Eager Loading
-
-The relationships can be 'eager loaded' by passing the `with` method
-while creating the model instance:
-
-```js
-this.posts.with(['author', 'comments']).find(1)
-```
 
 ### Lazy Loading
 
