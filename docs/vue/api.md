@@ -147,6 +147,51 @@ PostApi.select(['id', 'title']).get()
 PostApi.paginate({ page: 2, pageSize: 5 }).get()
 ```
 
+## Relationships
+
+::: warning
+The respective endpoints must be manually created on Laravel
+:::
+The Api exposes four default methods that can be used to interact with the model's relationships:
+
+### One to One
+```ts
+// GET http://localhost:8000/api/posts/1/comments
+await PostApi.hasOne('comments', 1).get()
+
+// GET http://localhost:8000/api/posts/1/comments/2
+await PostApi.hasOne('comments', 1).show({id: 2})
+
+// POST http://localhost:8000/api/posts/1/comments
+await PostApi.hasOne('comments', 1).create({text: 'ipsum lorem'})
+
+// PATCH http://localhost:8000/api/posts/1/comments/2
+await PostApi.hasOne('comments', 1).create({id:2, text: 'ipsum lorem samson'})
+
+// DELETE http://localhost:8000/api/posts/1/comments/2
+await PostApi.hasOne('comments', 1).delete({id:2})
+```
+
+### One to Many
+The Api exposes four default methods that can be used to interact with the model's relationships:
+
+```ts
+// GET http://localhost:8000/api/posts/1/comments
+await PostApi.hasMany('comments', 1).get()
+
+// GET http://localhost:8000/api/posts/1/comments/2
+await PostApi.hasMany('comments', 1).show({id: 2})
+
+// POST http://localhost:8000/api/posts/1/comments
+await PostApi.hasMany('comments', 1).create({text: 'ipsum lorem'})
+
+// PATCH http://localhost:8000/api/posts/1/comments/2
+await PostApi.hasMany('comments', 1).create({id:2, text: 'ipsum lorem samson'})
+
+// DELETE http://localhost:8000/api/posts/1/comments/2
+await PostApi.hasMany('comments', 1).delete({id:2})
+```
+
 ## Casting Dates
 All default laravel timestamps (`created_at`, `updated_at` and `deleted_at`) attributes are automatically converted 
 to `Date` objects. You can extend additional attributes by overriding the `dates` property. Dot notation is supported
@@ -206,7 +251,7 @@ export default class PostApi extends Api {
 ```
 
 ## Custom Class
-You can also create a custom class which extends the default `Api` class.
+You can also create a custom base class which extends the default `Api` class.
 
 **Example**
 ```ts
