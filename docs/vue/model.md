@@ -228,13 +228,12 @@ async author(): Promise<IUser>
 ### Has Many Relationship
 
 On a `hasMany` relationship, the first parameter is the `Api` Class
-of your relationship. Second parameter is the `primary key` on the 
-relationship model. The third parameter is the `foreign key` on your relationship model
+of your relationship. The second parameter is the `foreign key` on your relationship model
 
 ```ts
 async comments(): Promise<IComment[]>
 {
-    return await this.hasMany(CommentApi, 'id', this.model.id)
+    return await this.hasMany(CommentApi, this.model.id)
 }
 ```
 
