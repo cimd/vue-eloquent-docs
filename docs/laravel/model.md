@@ -62,7 +62,7 @@ select * from posts where title like %Tech%
 You can create your own custom filters by extending the `Filter` interface.
 The example below allows you to filter through the `Posts` Author relationship where all `authors` in id range
 
-```php
+```php{6,8}
 <?php
 
 namespace App\Models\Filters;
