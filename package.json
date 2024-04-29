@@ -1,6 +1,6 @@
 {
   "name": "@konnec/vue-eloquent-docs",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "An interface for Vue and Laravel Eloquent through API",
   "scripts": {
     "docs:dev": "vitepress dev docs --open",
