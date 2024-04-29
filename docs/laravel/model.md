@@ -68,6 +68,7 @@ The example below allows you to filter through the `Posts` Author relationship w
 namespace App\Models\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
+use Konnec\VueEloquentApi\Filters\Filter;
 
 class WhereHasAuthorIn implements Filter
 {
