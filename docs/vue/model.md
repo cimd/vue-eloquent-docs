@@ -29,6 +29,8 @@ export default class Post extends Model {
 
   constructor(post?: IPost){
     super()
+    // The factory method is only needed if you want to create a Model
+    // instance from an existing object, instead of from API
     super.factory(post)
   }
 }
@@ -405,13 +407,13 @@ state: {
 ## Observers
 Similarly to the API class, the Model also has Observers:
 
-**Find**: `retriving()` and `retrieved(payload)`
+**Find**: `retriving()`, `retrieved(payload)` and `retrivingError(payload)`
 
-**Update**: `updating()` and `updated(payload)`
+**Update**: `updating()`, `updated(payload)` and `updatingError(payload)`
 
-**Create**: `storing()` and `stored(payload)`
+**Create**: `storing()`, `stored(payload)` and `storingError(payload)`
 
-**Delete**: `deleting()` and `deleted(payload)`
+**Delete**: `deleting()`, `deleted(payload)` and `deletingError(payload)`
 
 Those are good placeholders for displaying error messages to the user, passing values to the Store, or mutating the data:
 

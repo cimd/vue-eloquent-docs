@@ -94,6 +94,6 @@ The inverse of the Can method:
 const post = new Post()
 post.$acl.set({ update: false })
 
-console.log(post.$acl.canno('update'))
+console.log(post.$acl.cannot('update'))
 true
 ```

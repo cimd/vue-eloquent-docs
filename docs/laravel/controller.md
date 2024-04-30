@@ -30,11 +30,11 @@ return response()->json(['data' => $result]);
 To help with that, you can
 use the `Response Macros` below.
 ```php
-response->index($posts);    //or response()->json(['data' => $posts, 200);
-response->show($posts);     //or response()->json(['data' => $posts, 200);
-response->store($posts);    //or response()->json(['data' => $posts, 201);
-response->update($posts);   //or response()->json(['data' => $posts, 200);
-response->destroy($posts);  //or response()->json(['data' => $posts, 200);
+response()->index($posts);    //or response()->json(['data' => $posts, 200);
+response()->show($posts);     //or response()->json(['data' => $posts, 200);
+response()->store($posts);    //or response()->json(['data' => $posts, 201);
+response()->update($posts);   //or response()->json(['data' => $posts, 200);
+response()->destroy($posts);  //or response()->json(['data' => $posts, 200);
 
 ```
 
@@ -43,7 +43,7 @@ response->destroy($posts);  //or response()->json(['data' => $posts, 200);
 If you're going to use mass assignments, you need to create its routes first. The package
 comes with a route macro `batch` helper:
 
-```php{1}
+```php{1,5-7}
 Route::batch('posts', PostController::class);
 Route::apiResource('posts', PostController::class);
 

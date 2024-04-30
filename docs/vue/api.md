@@ -114,8 +114,8 @@ Route::patch('posts/batch-destroy', [PostController::class, 'destroyBatch']);
 Note that the `batch-destroy` route is defined as `PATCH` instead of `DELETE`.
 
 ## API Query
-Check the Laravel's konnec/vue-eloquent-api package documention on how to configure the 
-controllers for the below queries below 
+Check the Laravel's [konnec/vue-eloquent-api](../laravel/installation) 
+package documentation on how to configure the controllers for the queries below 
 
 ### Filtering
 ```ts

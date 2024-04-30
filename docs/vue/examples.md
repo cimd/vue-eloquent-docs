@@ -35,9 +35,9 @@ import UserApi from './UserApi'
 import { IUser } from './UserInterface'
 
 export default class Post extends Model {
-  protected api = PostApi
+  api = PostApi
 
-  public model = reactive({
+  model = reactive({
     id: undefined,
     created_at: undefined,
     updated_at: undefined,
@@ -89,11 +89,11 @@ import PostApi from './PostApi'
 import { IPost } from './PostInterface'
 
 export default class PostsCollection extends Collection {
-  protected api = PostApi
+  api = PostApi
 
   protected channel = 'posts'
 
-  public data = reactive([] as IPost[])
+  data = reactive([] as IPost[])
 
   constructor(posts?: IPost[]){
     super()
