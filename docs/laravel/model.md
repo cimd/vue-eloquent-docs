@@ -20,7 +20,10 @@ class Post extends Model
 ```
 
 ## Filters
-Now create a `$filter` property and extend the required filters:
+Filters allows you to query data through the API. You can define which attributes
+can be filtered, and how it can be filtered.
+
+To get started, create a `$filter` property and extend the required filters:
 
 ```php{13-15}
 <?php
@@ -43,7 +46,7 @@ class Post extends Model
 
 In the example above, we are enabling the `author_id` property of the `Post` model to be filtered by an equality operator:
 ```sql
-select * from posts where author_id=1
+select * from posts where author_id=?
 ```
 
 ### Available Filters

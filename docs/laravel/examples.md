@@ -77,51 +77,47 @@ Route::apiResource('posts', PostController::class);
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
+use Konnec\VueEloquentApi\Traits\HasBatchActions;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Models\Post;
 
 class PostController extends Controller
 {
+    use HasBatchActions;
+
     public function index(Request $request): JsonResponse
     {
         $result = Post::apiQuery($request);
 
-        return response()->json($result);
+        return response()->index($result);
     }
 
-    public function store(Request $request): array
+    public function store(Request $request): JsonResponse
     {
         $post = Post::create($request->all());
 
-        return [
-            'data' => $post->fresh()->toArray(),
-        ];
+        return response()->store($post);
     }
 
-    public function show(Post $post): array
+    public function show(Post $post): JsonResponse
     {
-        return [
-            'data' => $post->toArray(),
-        ];
+        return response()->show($post);
     }
 
-    public function update(Request $request, Post $post): array
+    public function update(Request $request, Post $post): JsonResponse
     {
         $post->fill($request->all())->save();
 
-        return [
-            'data' => $post->toArray(),
-        ];
+        return response()->update($post);
     }
+
 
     public function destroy(Post $post): array
     {
         $post->delete();
 
-        return [
-            'data' => $post->toArray(),
-        ];
+        return response()->destroy($post);
     }
 }
 ```

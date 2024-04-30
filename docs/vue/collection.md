@@ -22,7 +22,7 @@ import { IPost } from './IPost'
 import { reactive } from 'vue'
 
 export default class PostCollection extends Collection {
-  protected api = PostApi
+  api = PostApi
     
   // Note that data should be a reactive array
   data = reactive<IPost[]>([])
@@ -138,15 +138,11 @@ import { IPost } from './IPost'
 import { reactive } from 'vue'
 
 export default class PostCollection extends Collection {
-    protected api = PostApi
+    api = PostApi
     
     protected channel = 'posts'
     
-    public data = reactive<IPost[]>([])
-    
-    public filter = reactive({
-    creator_id: undefined as number | undefined,
-    })
+    data = reactive<IPost[]>([])
     
     constructor(posts?: IPost[]){
     super()
