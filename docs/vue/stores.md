@@ -8,9 +8,11 @@ The Laravel package already has all the necessary endpoints to interact with the
 ## Installation
 
 ```ts
+import { createPinia } from 'pinia'
 import { PiniaApiPlugin } from '@konnec/vue-eloquent'
 
-app.use(PiniaApiPlugin)
+const pinia = createPinia()
+pinia.use(PiniaApiPlugin)
 ```
 
 ## Configuration
