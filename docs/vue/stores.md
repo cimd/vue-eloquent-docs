@@ -8,9 +8,9 @@ The Laravel package already has all the necessary endpoints to interact with the
 ## Installation
 
 ```ts
-import { VueEloquentPlugin } from '@konnec/vue-eloquent'
+import { PiniaApiPlugin } from '@konnec/vue-eloquent'
 
-app.use(VueEloquentPlugin)
+app.use(PiniaApiPlugin)
 ```
 
 ## Configuration
