@@ -4,7 +4,7 @@ The API classes are ways to integrate your Vue SPA with Laravel's APIs in an Lar
 ![Api Class](/api-class.png)
 
 ## Instantiating Axios
-You need to pass your `Axios` instance to the package as so:
+You can either an existing `Axios` instance to the package as so:
 
 ```js{2,9}
 import axios, { AxiosInstance } from 'axios'
@@ -18,14 +18,26 @@ const http: AxiosInstance = axios.create({
 createHttp({ httpClient: http })
 ```
 
+Or you can let the package create an instance for you:
+```js{1,3-6}
+import { createHttp } from '@konnec/vue-eloquent'
+
+const http = createHttp({ 
+    baseURL: 'http://localhost:8000',
+    bearerToken: 'your-token-here'
+})
+```
+
+
 You now have access to the `Axios` instance from your application
 
 This will append an `api` prefix to all requests to the `baseUrl`. You can customize the api prefix through the 
 `createHttp` method:
 
 ```js
-createHttp({ 
-    httpClient: http,
+const http = createHttp({
+    baseURL: 'http://localhost:8000',
+    bearerToken: 'your-token-here',
     apiPrefix: 'api/v1'
 })
 ```

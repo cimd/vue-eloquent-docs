@@ -1,6 +1,27 @@
 # Examples
 
-## Setup
+### Setup
+
+```ts
+import Auth from './examples/Auth'
+import { createHttp } from '@konnec/vue-eloquent'
+
+/**
+ * Create your auth class to handle the authentication endpoints
+ * The Auth class should extend the package's default Auth class
+ */
+const auth = new Auth()
+
+/**
+ * Create an instance of the HTTP service.
+ */
+const http = createHttp({
+    baseURL: 'http://localhost:9000',
+    apiPrefix: 'api/v1',
+    bearerToken: auth.token,
+})
+
+```
 
 ### Api Class
 
