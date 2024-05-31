@@ -4,7 +4,7 @@ The API classes are ways to integrate your Vue SPA with Laravel's APIs in an Lar
 ![Api Class](/api-class.png)
 
 ## Instantiating Axios
-You can either an existing `Axios` instance to the package as so:
+You can either pass an existing `Axios` instance to the package as so:
 
 ```js{2,9}
 import axios, { AxiosInstance } from 'axios'

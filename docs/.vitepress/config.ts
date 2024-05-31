@@ -37,7 +37,6 @@ export default defineConfig({
           { text: 'Collection', link: '/vue/collection' },
           { text: 'Auth', link: '/vue/auth' },
           { text: 'Policy', link: '/vue/policy' },
-          { text: 'Pinia Stores', link: '/vue/stores' },
           { text: 'DevTools', link: '/vue/devtools' },
           { text: 'Examples', link: '/vue/examples' },
         ]
