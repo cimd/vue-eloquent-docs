@@ -1,10 +1,13 @@
 # Examples
 
+These examples are also available in the package's 
+[examples folder](https://github.com/cimd/vue-eloquent/tree/main/examples).
+
 ### Setup
 
 ```ts
 import Auth from './examples/Auth'
-import { createHttp } from '@konnec/vue-eloquent'
+import { createHttp, VueEloquentPlugin } from '@konnec/vue-eloquent'
 
 /**
  * Create your auth class to handle the authentication endpoints
@@ -21,17 +24,37 @@ const http = createHttp({
     bearerToken: auth.token,
 })
 
+/**
+ * Optional: Vue DevTools support
+ */
+app.use(VueEloquentPlugin)
+```
+
+### Interfaces
+
+```ts
+import type { ModelParams } from '@konnec/vue-eloquent'
+import type { IUser } from './UserInterface'
+import type { IComment } from './CommentInterface'
+
+export interface IPost extends ModelParams {
+  title: string | undefined
+  description: string | undefined
+  author_id: number | undefined
+  author?: IUser | undefined
+  comments?: IComment[] | undefined
+}
 ```
 
 ### Api Class
 
 ```ts
-import { Api } from '../../src/index'
+import { Api } from '@konnec/vue-eloquent'
 
 export default class PostApi extends Api {
-    protected resource = 'posts'
+    protected override resource = 'posts'
 
-    protected dates = [
+    protected override dates = [
         'created_at',
         'updated_at',
         'deleted_at',
@@ -49,38 +72,40 @@ export default class PostApi extends Api {
 ```ts
 import { required } from '@vuelidate/validators'
 import { computed, reactive } from 'vue'
-import { Model } from '../../src'
+import { Model } from '@konnec/vue-eloquent'
 import PostApi from './PostApi'
-import { IPost } from './PostInterface'
+import type { IPost } from './PostInterface'
 import UserApi from './UserApi'
-import { IUser } from './UserInterface'
+import type { IUser } from './UserInterface'
+import CommentApi from './CommentApi'
+import type { IComment } from './CommentInterface'
 
-export default class Post extends Model {
-  api = PostApi
+export default class Post extends Model<IPost> {
+  override api = PostApi
 
-  model = reactive({
+  override model = reactive({
     id: undefined,
     created_at: undefined,
     updated_at: undefined,
     deleted_at: undefined,
     author_id: undefined,
     title: undefined,
-    text: undefined,
-    author: undefined as IUser,
-    readers: undefined as IUser[],
-  } as IPost)
+    description: undefined,
+    author: {} as IUser,
+    comments: [] as IComment[],
+  }) as unknown as IPost
 
-  protected parameters = {
+  protected override parameters = {
     title: 'New Post',
   }
 
   constructor(post?: IPost) {
     super()
-    this.factory(post)
+    super.factory(post)
     super.initValidations()
   }
 
-  protected validations = computed(() => ({
+  protected override validations = computed(() => ({
     model: {
       title: {
         required
@@ -89,14 +114,12 @@ export default class Post extends Model {
     }
   }))
 
-  async author(): Promise<IUser>
-  {
-    return await this.hasOne(UserApi, this.model.author_id)
+  async author(): Promise<IUser> {
+    return await this.hasOne(UserApi, this.model.author_id as number)
   }
 
-  async readers(): Promise<IUser[]>
-  {
-    return await this.hasMany(UserApi, 'id', this.model.author_id)
+  comments() {
+    return this.hasMany(CommentApi, this.model.id as number)
   }
 }
 ```
@@ -105,20 +128,38 @@ export default class Post extends Model {
 
 ```ts
 import { reactive } from 'vue'
-import { Collection } from '../../src/index'
+import { Collection } from '@konnec/vue-eloquent'
 import PostApi from './PostApi'
-import { IPost } from './PostInterface'
+import type { IPost } from './PostInterface'
 
 export default class PostsCollection extends Collection {
-  api = PostApi
+  override api = PostApi
 
-  protected channel = 'posts'
+  protected override channel = 'posts'
 
-  data = reactive([] as IPost[])
+  override data = reactive<IPost[]>([])
 
-  constructor(posts?: IPost[]){
+  constructor(posts?: IPost[]) {
     super()
-    this.factory(posts)
+    if (posts) super.factory(posts)
+  }
+
+  protected override async broadcastCreated(e: any): Promise<void> {
+    // add new post to the collection
+    const newPost = await this.api.show<IPost>(e.id)
+    this.data.push(newPost.data)
+  }
+}
+```
+
+### Policy
+
+```ts
+import { Policy } from '@konnec/vue-eloquent'
+
+export default class Acl extends Policy {
+  constructor(acl?: any) {
+    super(acl)
   }
 }
 ```
@@ -129,19 +170,32 @@ export default class PostsCollection extends Collection {
 
 ```vue
 <template>
-  <q-card style='width:400px;max-width:100%; '>
-    <q-card-section class='bg-primary'>
-      <span class='text-white text-h6'>My Post</span>
+  <q-card style="width: 400px; max-width: 100%">
+    <q-card-section class="bg-primary">
+      <span class="text-white text-h6">My Post</span>
     </q-card-section>
-    <q-form @submit='onSubmit'>
+    <q-form @submit="onSubmit">
       <q-card-section>
-        <div class='row'><div class='col'><q-input v-show='false' v-model='post.model.id' label='ID' /></div></div>
-        <div class='row'><div class='col'><q-input v-model='post.model.name' :error='post.$model.title.$error' label='Title' /></div></div>
-        <div class='row'><div class='col'><q-input v-model='post.model.description' label='Description' /></div></div>
+        <div class="row">
+          <div class="col"><q-input v-show="false" v-model="post.model.id" label="ID" /></div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <q-input
+              v-model="post.model.title"
+              :error="post.$model.title.$error"
+              :error-message="post.$model.title.$errors[0]?.$message"
+              label="Title"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col"><q-input v-model="post.model.description" label="Description" /></div>
+        </div>
       </q-card-section>
       <q-card-actions>
         <q-space />
-        <q-button label='Submit' :loading='post.state.isLoading' type='submit' />
+        <q-btn label="Submit" :loading="post.state.isLoading" type="submit" />
       </q-card-actions>
     </q-form>
   </q-card>
@@ -149,6 +203,7 @@ export default class PostsCollection extends Collection {
 
 <script lang="ts">
 import Post from './Post'
+import type { PropType } from 'vue'
 import { defineComponent } from 'vue'
 import { Action } from '@konnec/vue-eloquent'
 
@@ -162,24 +217,24 @@ export default defineComponent({
     action: {
       required: true,
       type: String as PropType<Action>
-    },
+    }
   },
+  emits: ['close', 'created', 'updated'],
   data() {
     return {
       post: new Post()
     }
   },
-  created() {
-    // Using the same for form to CREATE, VIEW OR EDIT a Post
+  async created() {
+    // Using the same form to CREATE, VIEW OR EDIT a Post
     if (this.action !== Action.CREATE) {
-      this.post = new Post(this.postId)
+      this.post = await Post.find(this.postId)
     }
   },
   methods: {
     async onSubmit() {
       // Validate the form. Display error messages if invalid, or continue to submitting
-      this.post.$validate()
-      if (this.post.$invalid) return
+      if (!this.post.$validate()) return
 
       const { actioned, model } = await this.post.save()
       this.$emit(actioned, model)
@@ -196,20 +251,19 @@ export default defineComponent({
 <template>
   <q-page>
 
-    <span class='text-white text-h6'>Posts Page</span>
+    <span class="text-white text-h6">Posts Page</span>
 
-    <div class='row'>
-      <!--  Display your posts here -->
+    <div class="row">
+      <!--  Display your posts here: posts.data -->
     </div>
 
-    <q-dialog v-model='open'>
+    <q-dialog v-model="open">
       <post-form
-        :action='action'
-        :post-id='postId'
-        @close='open = false'
-        @created='onCreated'
-        @deleted='onDeleted'
-        @updated='onUpdated' />
+        :action="action"
+        :post-id="postId"
+        @close="open = false"
+        @created="onCreated"
+        @updated="onUpdated" />
     </q-dialog>
 
   </q-page>
@@ -230,19 +284,18 @@ export default defineComponent({
       posts: new PostsCollection(),
       open: false,
       action: Action.CREATE as Action,
+      postId: 0,
     }
   },
   created() {
+    this.posts.joinChannel()
     this.posts.where({ author_id: 1 }).get()
   },
   methods: {
-    onCreated(args) {
+    onCreated(args: IPost) {
       // do something
     },
-    onUpdated(args) {
-      // do something
-    },
-    onDeleted(args) {
+    onUpdated(args: IPost) {
       // do something
     },
   },

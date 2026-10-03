@@ -10,7 +10,7 @@ you would typically have different components for handling a single
 ![Collection Class](/collection-class.png)
 
 ## Create a Collection Class
-Create a `PostCollection` class that extends the default `Collection` class. Note we're using the `PostApi` 
+Create a `PostsCollection` class that extends the default `Collection` class. Note we're using the `PostApi` 
 created previously.
 
 **Example**
@@ -18,38 +18,42 @@ created previously.
 ```ts
 import { Collection } from '@konnec/vue-eloquent'
 import PostApi from './PostApi'
-import { IPost } from './IPost'
+import type { IPost } from './PostInterface'
 import { reactive } from 'vue'
 
-export default class PostCollection extends Collection {
-  api = PostApi
+export default class PostsCollection extends Collection {
+  override api = PostApi
     
   // Note that data should be a reactive array
-  data = reactive<IPost[]>([])
+  override data = reactive<IPost[]>([])
 
   constructor(posts?: IPost[]){
     super()
       
     // The factory method is only required if you choose to create an instance
     // from an existing IPost array
-    super.factory(posts)
+    if (posts) super.factory(posts)
   }
 }
 ```
 
+::: warning
+The `Collection` constructor is `protected`, so your class must declare its own `constructor` and call `super()` first.
+:::
+
 You can then access the collection from the `data` attribute.
 
-```vue{2,7,13}
+```vue{2,7,12}
 <script lang="ts">
-import PostsCollection from './Post'
+import PostsCollection from './PostsCollection'
 
 export default defineComponent({
   data() {
     return {
-      posts: new PostCollection(),
+      posts: new PostsCollection(),
     }
   },
-  created: {
+  created() {
     // this will fetch all posts from the API and instantiate them to
     // this.posts.data attribute
     this.posts.get()
@@ -58,7 +62,18 @@ export default defineComponent({
 </script>
 ```
 
+`get` also resolves with the fetched records.
+
+::: tip
+Create your collections inside the component (`setup()`, `data()`...). The constructor registers an 
+`onBeforeUnmount` hook, which leaves the broadcast channel when the component is unmounted. Outside of a component 
+Vue will log a warning.
+:::
+
 ## Eloquent Api
+
+The `Collection` has the same query methods as the [API Class](/vue/api#api-query), which are sent to the API when
+you call `get()`.
 
 ### Filtering
 
@@ -99,6 +114,27 @@ this.posts.sort(['author_id']).get()
 this.posts.sort(['+author_id','-title']).get()
 ```
 
+### Paginate
+```ts
+// Set Page number and page size
+this.posts.paginate({ page: 2, pageSize: 5 }).get()
+```
+
+## Errors
+If the request fails, `get` throws a `CollectionError` and `state.isError` is set to `true`.
+
+```ts
+import { CollectionError } from '@konnec/vue-eloquent'
+
+try {
+  await this.posts.get()
+} catch (e) {
+  if (e instanceof CollectionError) {
+    console.log(e.error) // the ApiError
+  }
+}
+```
+
 ## States
 The `Collection` has 3 states which are available and updated during the API requests. You can use them to display
 state changes on you UI, e.g. a `loading` indicator on a button
@@ -106,16 +142,24 @@ state changes on you UI, e.g. a `loading` indicator on a button
 ```ts
 state: {
     isLoading: boolean,
-    isSucess: boolean,
+    isSuccess: boolean,
     isError: boolean
 }
 ```
 
+## Observers
+Similar to the `Api` class, you can override these `protected` methods:
+
+`fetching(payload)`: runs before the request, with the query being sent
+
+`fetched(response)`: runs after the request, with the API response
+
+`fetchingError(error)`: runs if the request fails
+
 ## Broadcast
 
 `Vue Eloquent` uses `Laravel Echo` for broadcasting. After defining the channel
-name on your Collection you have to initialize the broadcasting on your
-component.
+name on your Collection you have to join the channel on your component.
 
 Firstly you need to pass your `Laravel Echo` instance to the package:
 ```ts
@@ -134,26 +178,26 @@ Then you need to define the channel name on your collection class
 ```ts{9}
 import { Collection } from '@konnec/vue-eloquent'
 import PostApi from './PostApi'
-import { IPost } from './IPost'
+import type { IPost } from './PostInterface'
 import { reactive } from 'vue'
 
-export default class PostCollection extends Collection {
-    api = PostApi
+export default class PostsCollection extends Collection {
+  override api = PostApi
     
-    protected channel = 'posts'
+  protected override channel = 'posts'
     
-    data = reactive<IPost[]>([])
+  override data = reactive<IPost[]>([])
     
-    constructor(posts?: IPost[]){
+  constructor(posts?: IPost[]){
     super()
-    super.factory(posts)
-    }
+    if (posts) super.factory(posts)
+  }
 }
 ```
 
-```vue{11}
+```vue{10}
 <script lang="ts">
-import PostsCollection from './Post'
+import PostsCollection from './PostsCollection'
 
 export default defineComponent({
   data() {
@@ -161,8 +205,8 @@ export default defineComponent({
       posts: new PostsCollection(),
     }
   },
-  created: {
-    this.initBroadcast()
+  created() {
+    this.posts.joinChannel()
     // this will fetch all posts from the API and instantiate them to
     // this.posts.data attribute
     this.posts.get()
@@ -171,11 +215,17 @@ export default defineComponent({
 </script>
 ```
 
-Alternatively you can pass a new channel directly to the broadcast constructor:
+Alternatively you can pass a new channel directly to the `joinChannel` method:
 ```ts
-this.initBroadcast('posts')
+this.posts.joinChannel('posts')
 ```
 
+The collection listens to the `.created`, `.updated` and `.deleted` events of the channel. The channel is left 
+automatically when the component is unmounted, or you can leave it manually:
+
+```ts
+this.posts.leaveChannel()
+```
 
 ### Broadcast Observers
 
@@ -185,31 +235,31 @@ this.initBroadcast('posts')
 
 `broadcastDeleted(e: any)`
 
-Broadcast Observers are a good place to subscribe to broadcast events and update your `Collection` accordingly.
+Broadcast Observers are called when the respective event is received. They do nothing by default, so they are the 
+place to update your `Collection` accordingly.
 
-```ts{18-23}
+```ts{18-22}
 import { reactive } from 'vue'
-import { Collection } from '../src/index'
+import { Collection } from '@konnec/vue-eloquent'
 import PostApi from './PostApi'
-import { IPost } from './PostInterface'
+import type { IPost } from './PostInterface'
 
 export default class PostsCollection extends Collection {
-  protected api = PostApi
+  override api = PostApi
 
-  protected channel = 'posts'
+  protected override channel = 'posts'
 
-  public data = reactive<IPost[]>([])
+  override data = reactive<IPost[]>([])
 
   constructor(posts?: IPost[]){
     super()
-    super.factory(posts)
+    if (posts) super.factory(posts)
   }
 
-  protected async broadcastCreated(e: any): Promise<{ data: IPost }>
-  {
+  protected override async broadcastCreated(e: any): Promise<void> {
     // add new post to the collection
-    const newPost = await this.api.show(e.id)
-    this.data.push(newPost)
+    const newPost = await this.api.show<IPost>(e.id)
+    this.data.push(newPost.data)
   }
 }
 ```

@@ -22,6 +22,37 @@ class PostController extends Controller
 }
 ```
 
+You can pass a second parameter ``false`` to the ``apiQuery`` trait it you want to return a query ``Builder``
+instance instead of a collection.
+
+```php{13}
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use App\Models\Post;
+
+class PostController extends Controller
+{
+    public function index(Request $request): JsonResponse
+    {
+        $result = Post::apiQuery($request, false)->get();
+
+        return response()->json(['data' => $result]);
+    }   
+}
+```
+
+::: warning
+This will exclude the ``appends`` from request as it needs to be applied at the collection, instead of the query builder.
+
+You can still call ``apiAppend($request)`` once you have your query defined.
+:::
+
+
+
 ## Response Macros
 The vue package expects the responses to be inside a `data` object. 
 ```php
