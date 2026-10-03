@@ -127,6 +127,11 @@ try {
 }
 ```
 
+::: tip
+`e.error.response` is `undefined` when no response was received (network errors, timeouts), so always use optional 
+chaining. The original error is also available as the standard `e.cause`.
+:::
+
 ### Destroying without a model
 By default `destroy` takes a model (or an id) and calls `DELETE /api/posts/{id}`. If you pass `false` as the second 
 argument, no id is added to the url and the payload is sent as query parameters instead:
