@@ -75,6 +75,7 @@ You can now access your laravel `Posts` API through the following **static** met
 | Method | Request |
 |---|---|
 | `PostApi.get()` | `GET /api/posts` |
+| `PostApi.first()` | `GET /api/posts` (resolves the first record) |
 | `PostApi.show(1)` | `GET /api/posts/1` |
 | `PostApi.store(post)` | `POST /api/posts` |
 | `PostApi.update(post)` | `PATCH /api/posts/{post.id}` |
@@ -234,6 +235,9 @@ PostApi.select(['id', 'title']).get()
 ```ts
 // Sorting `author_id` ascending and then title in descending order.
 PostApi.sort(['author_id', '-title']).get()
+
+// Shortcut to sort a column in descending order (same as `sort(['-created_at'])`).
+PostApi.latest('created_at').get()
 ```
 
 ### Paginate
@@ -243,9 +247,16 @@ PostApi.sort(['author_id', '-title']).get()
 PostApi.paginate({ page: 2, pageSize: 5 }).get()
 ```
 
+### First
+```ts
+// Resolves with the first record of the list, or `null` when the list is empty
+const response = await PostApi.where({ author_id: 1 }).latest('created_at').first()
+console.log(response.data?.title)
+```
+
 ::: tip
 `where` and `paginate` merge the values of repeated calls. `with`, `append`, `select` and `sort` replace the 
-values of previous calls.
+values of previous calls, while `latest` adds its column to the current sorting (a later `sort` replaces it).
 :::
 
 ::: warning
