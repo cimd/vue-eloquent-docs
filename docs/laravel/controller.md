@@ -51,7 +51,53 @@ This will exclude the ``appends`` from request as it needs to be applied at the 
 You can still call ``apiAppend($request)`` once you have your query defined.
 :::
 
+## Individual Scopes
+`apiQuery` applies `fields`, `filter`, `include`, `sort` and `paginate` (and `append` when it returns the result). 
+Each of these also has its own scope that you can call on a query, passing the `$request`:
 
+| Scope | Request parameter |
+|---|---|
+| `apiFields($request)` | `fields` |
+| `apiFilter($request)` | `filter` |
+| `apiInclude($request)` | `include` |
+| `apiSort($request)` | `sort` |
+| `apiLimit($request)` | `limit` |
+| `apiPaginate($request)` | `paginate` |
+| `apiAppend($request)` | `append` |
+
+`apiLimit` limits the number of records returned (`limit` in the query), and is **not** part of `apiQuery`:
+call it yourself when you need it.
+
+```php{13}
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use App\Models\Post;
+
+class PostController extends Controller
+{
+    public function index(Request $request): JsonResponse
+    {
+        $result = Post::apiSort($request)->apiLimit($request)->get();
+
+        return response()->index($result);
+    }   
+}
+```
+
+```
+GET /api/posts?sort=-created_at&limit=5
+```
+```sql
+select * from posts order by created_at desc limit 5
+```
+
+::: tip
+`limit` is cast to an integer. Use `paginate` instead when you need page numbers and totals.
+:::
 
 ## Response Macros
 The vue package expects the responses to be inside a `data` object. 
