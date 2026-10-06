@@ -75,7 +75,7 @@ You can now access your laravel `Posts` API through the following **static** met
 | Method | Request |
 |---|---|
 | `PostApi.get()` | `GET /api/posts` |
-| `PostApi.first()` | `GET /api/posts` (resolves the first record) |
+| `PostApi.first()` | `GET /api/posts` (resolves the first record, sends `limit=1`) |
 | `PostApi.show(1)` | `GET /api/posts/1` |
 | `PostApi.store(post)` | `POST /api/posts` |
 | `PostApi.update(post)` | `PATCH /api/posts/{post.id}` |
@@ -247,15 +247,21 @@ PostApi.latest('created_at').get()
 PostApi.paginate({ page: 2, pageSize: 5 }).get()
 ```
 
+### Limit
+```ts
+// Requesting at most 10 records
+PostApi.limit(10).get()
+```
+
 ### First
 ```ts
-// Resolves with the first record of the list, or `null` when the list is empty
+// Requests a single record (`limit=1`) and resolves with it, or `null` when the list is empty
 const response = await PostApi.where({ author_id: 1 }).latest('created_at').first()
 console.log(response.data?.title)
 ```
 
 ::: tip
-`where` and `paginate` merge the values of repeated calls. `with`, `append`, `select` and `sort` replace the 
+`where` and `paginate` merge the values of repeated calls. `with`, `append`, `select`, `limit` and `sort` replace the 
 values of previous calls, while `latest` adds its column to the current sorting (a later `sort` replaces it).
 :::
 

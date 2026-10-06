@@ -52,7 +52,7 @@ You can still call ``apiAppend($request)`` once you have your query defined.
 :::
 
 ## Individual Scopes
-`apiQuery` applies `fields`, `filter`, `include`, `sort` and `paginate` (and `append` when it returns the result). 
+`apiQuery` applies `fields`, `filter`, `include`, `sort`, `limit` and `paginate` (and `append` when it returns the result). 
 Each of these also has its own scope that you can call on a query, passing the `$request`:
 
 | Scope | Request parameter |
@@ -65,8 +65,8 @@ Each of these also has its own scope that you can call on a query, passing the `
 | `apiPaginate($request)` | `paginate` |
 | `apiAppend($request)` | `append` |
 
-`apiLimit` limits the number of records returned (`limit` in the query), and is **not** part of `apiQuery`:
-call it yourself when you need it.
+`apiLimit` limits the number of records returned (`limit` in the query). `apiQuery` already calls it, so you only need 
+it when you build the query yourself.
 
 ```php{13}
 <?php
@@ -96,7 +96,8 @@ select * from posts order by created_at desc limit 5
 ```
 
 ::: tip
-`limit` is cast to an integer. Use `paginate` instead when you need page numbers and totals.
+`limit` is cast to an integer. Use `paginate` instead when you need page numbers and totals. When both are sent, `apiQuery` applies `limit` 
+after `paginate`: the page offset is kept, but `limit` caps the number of records of the page.
 :::
 
 ## Response Macros
