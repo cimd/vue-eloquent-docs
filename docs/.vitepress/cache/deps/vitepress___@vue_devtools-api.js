@@ -28,7 +28,7 @@ var __toESM = (mod, isNodeMode, target2) => (target2 = mod != null ? __create(__
   mod
 ));
 var init_esm_shims = __esm({
-  "../../node_modules/.pnpm/tsup@8.3.5_@microsoft+api-extractor@7.48.0_@types+node@22.10.1__@swc+core@1.5.29_jiti@2.0.0_p_swvvp2d4pgn6xuiiec4l4x2i7a/node_modules/tsup/assets/esm_shims.js"() {
+  "../../node_modules/.pnpm/tsup@8.4.0_@microsoft+api-extractor@7.51.1_@types+node@22.13.14__jiti@2.4.2_postcss@8.5_96eb05a9d65343021e53791dd83f3773/node_modules/tsup/assets/esm_shims.js"() {
     "use strict";
   }
 });
@@ -545,16 +545,16 @@ var __copyProps2 = (to, from, except, desc) => {
   }
   return to;
 };
-var __toESM2 = (mod, isNodeMode, target22) => (target22 = mod != null ? __create2(__getProtoOf2(mod)) : {}, __copyProps2(
+var __toESM2 = (mod, isNodeMode, target21) => (target21 = mod != null ? __create2(__getProtoOf2(mod)) : {}, __copyProps2(
   // If the importer is in node compatibility mode or this is not an ESM
   // file that has been converted to a CommonJS file using a Babel-
   // compatible transform (i.e. "__esModule" has not been set), then set
   // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp2(target22, "default", { value: mod, enumerable: true }) : target22,
+  isNodeMode || !mod || !mod.__esModule ? __defProp2(target21, "default", { value: mod, enumerable: true }) : target21,
   mod
 ));
 var init_esm_shims2 = __esm2({
-  "../../node_modules/.pnpm/tsup@8.3.5_@microsoft+api-extractor@7.48.0_@types+node@22.10.1__@swc+core@1.5.29_jiti@2.0.0_p_swvvp2d4pgn6xuiiec4l4x2i7a/node_modules/tsup/assets/esm_shims.js"() {
+  "../../node_modules/.pnpm/tsup@8.4.0_@microsoft+api-extractor@7.51.1_@types+node@22.13.14__jiti@2.4.2_postcss@8.5_96eb05a9d65343021e53791dd83f3773/node_modules/tsup/assets/esm_shims.js"() {
     "use strict";
   }
 });
@@ -2123,19 +2123,6 @@ function getAppRecord(instance) {
   else if (instance.root)
     return instance.appContext.app.__VUE_DEVTOOLS_NEXT_APP_RECORD__;
 }
-async function getComponentId(options) {
-  const { app, uid, instance } = options;
-  try {
-    if (instance.__VUE_DEVTOOLS_NEXT_UID__)
-      return instance.__VUE_DEVTOOLS_NEXT_UID__;
-    const appRecord = await getAppRecord(app);
-    if (!appRecord)
-      return null;
-    const isRoot = appRecord.rootInstance === instance;
-    return `${appRecord.id}:${isRoot ? "root" : uid}`;
-  } catch (e) {
-  }
-}
 function isFragment(instance) {
   var _a25, _b25;
   const subTreeType = (_a25 = instance.subTree) == null ? void 0 : _a25.type;
@@ -2164,6 +2151,12 @@ function getInstanceName(instance) {
   if (fileName)
     return fileName;
   return "Anonymous Component";
+}
+function getUniqueComponentId(instance) {
+  var _a25, _b25, _c;
+  const appId = (_c = (_b25 = (_a25 = instance == null ? void 0 : instance.appContext) == null ? void 0 : _a25.app) == null ? void 0 : _b25.__VUE_DEVTOOLS_NEXT_APP_RECORD_ID__) != null ? _c : 0;
+  const instanceId = instance === (instance == null ? void 0 : instance.root) ? "root" : instance.uid;
+  return `${appId}:${instanceId}`;
 }
 function getComponentInstance(appRecord, instanceId) {
   instanceId = instanceId || `${appRecord.id}:root`;
@@ -2381,9 +2374,9 @@ function unhighlight() {
 }
 var inspectInstance = null;
 function inspectFn(e) {
-  const target22 = e.target;
-  if (target22) {
-    const instance = target22.__vueParentComponent;
+  const target21 = e.target;
+  if (target21) {
+    const instance = target21.__vueParentComponent;
     if (instance) {
       inspectInstance = instance;
       const el = instance.vnode.el;
@@ -2397,18 +2390,11 @@ function inspectFn(e) {
   }
 }
 function selectComponentFn(e, cb) {
-  var _a25;
   e.preventDefault();
   e.stopPropagation();
   if (inspectInstance) {
-    const app = (_a25 = activeAppRecord.value) == null ? void 0 : _a25.app;
-    getComponentId({
-      app,
-      uid: app.uid,
-      instance: inspectInstance
-    }).then((id) => {
-      cb(id);
-    });
+    const uniqueComponentId = getUniqueComponentId(inspectInstance);
+    cb(uniqueComponentId);
   }
 }
 var inspectComponentHighLighterSelectFn = null;
@@ -2558,7 +2544,7 @@ var StateEditor = class {
       const section = sections.shift();
       if (object instanceof Map)
         object = object.get(section);
-      if (object instanceof Set)
+      else if (object instanceof Set)
         object = Array.from(object.values())[section];
       else object = object[section];
       if (this.refEditor.isRef(object))
@@ -2616,9 +2602,9 @@ var StateEditor = class {
         else Reflect.deleteProperty(object, field);
       }
       if (!state.remove) {
-        const target22 = object[state.newKey || field];
-        if (this.refEditor.isRef(target22))
-          this.refEditor.set(target22, value);
+        const target21 = object[state.newKey || field];
+        if (this.refEditor.isRef(target21))
+          this.refEditor.set(target21, value);
         else if (toRaw(object) instanceof Map)
           object.set(state.newKey || field, value);
         else if (toRaw(object) instanceof Set)
@@ -2670,7 +2656,7 @@ init_esm_shims2();
 init_esm_shims2();
 var TIMELINE_LAYERS_STATE_STORAGE_ID = "__VUE_DEVTOOLS_KIT_TIMELINE_LAYERS_STATE__";
 function getTimelineLayersStateFromStorage() {
-  if (!isBrowser || typeof localStorage === "undefined" || localStorage === null) {
+  if (typeof window === "undefined" || !isBrowser || typeof localStorage === "undefined" || localStorage === null) {
     return {
       recordingState: false,
       mouseEventEnabled: false,
@@ -2680,7 +2666,7 @@ function getTimelineLayersStateFromStorage() {
       selected: ""
     };
   }
-  const state = localStorage.getItem(TIMELINE_LAYERS_STATE_STORAGE_ID);
+  const state = typeof localStorage.getItem !== "undefined" ? localStorage.getItem(TIMELINE_LAYERS_STATE_STORAGE_ID) : null;
   return state ? JSON.parse(state) : {
     recordingState: false,
     mouseEventEnabled: false,
@@ -2697,8 +2683,8 @@ var _a22;
 var _b2;
 (_b2 = (_a22 = target).__VUE_DEVTOOLS_KIT_TIMELINE_LAYERS) != null ? _b2 : _a22.__VUE_DEVTOOLS_KIT_TIMELINE_LAYERS = [];
 var devtoolsTimelineLayers = new Proxy(target.__VUE_DEVTOOLS_KIT_TIMELINE_LAYERS, {
-  get(target22, prop, receiver) {
-    return Reflect.get(target22, prop, receiver);
+  get(target21, prop, receiver) {
+    return Reflect.get(target21, prop, receiver);
   }
 });
 function addTimelineLayer(options, descriptor) {
@@ -2713,8 +2699,8 @@ var _a3;
 var _b3;
 (_b3 = (_a3 = target).__VUE_DEVTOOLS_KIT_INSPECTOR__) != null ? _b3 : _a3.__VUE_DEVTOOLS_KIT_INSPECTOR__ = [];
 var devtoolsInspector = new Proxy(target.__VUE_DEVTOOLS_KIT_INSPECTOR__, {
-  get(target22, prop, receiver) {
-    return Reflect.get(target22, prop, receiver);
+  get(target21, prop, receiver) {
+    return Reflect.get(target21, prop, receiver);
   }
 });
 var callInspectorUpdatedHook = debounce(() => {
@@ -2989,7 +2975,7 @@ function setActiveAppRecordId(id) {
   updateAllStates();
 }
 var devtoolsState = new Proxy(target[STATE_KEY], {
-  get(target22, property) {
+  get(target21, property) {
     if (property === "appRecords") {
       return devtoolsAppRecords;
     } else if (property === "activeAppRecordId") {
@@ -3001,13 +2987,13 @@ var devtoolsState = new Proxy(target[STATE_KEY], {
     }
     return target[STATE_KEY][property];
   },
-  deleteProperty(target22, property) {
-    delete target22[property];
+  deleteProperty(target21, property) {
+    delete target21[property];
     return true;
   },
-  set(target22, property, value) {
+  set(target21, property, value) {
     const oldState = { ...target[STATE_KEY] };
-    target22[property] = value;
+    target21[property] = value;
     target[STATE_KEY][property] = value;
     return true;
   }
@@ -3096,8 +3082,8 @@ var _a10;
 var _b10;
 (_b10 = (_a10 = target).__VUE_DEVTOOLS_KIT_PLUGIN_BUFFER__) != null ? _b10 : _a10.__VUE_DEVTOOLS_KIT_PLUGIN_BUFFER__ = [];
 var devtoolsPluginBuffer = new Proxy(target.__VUE_DEVTOOLS_KIT_PLUGIN_BUFFER__, {
-  get(target22, prop, receiver) {
-    return Reflect.get(target22, prop, receiver);
+  get(target21, prop, receiver) {
+    return Reflect.get(target21, prop, receiver);
   }
 });
 function _getSettings(settings) {
@@ -3163,16 +3149,6 @@ function setPluginSettings(pluginId, key, value) {
     /* SET_PLUGIN_SETTINGS */
   );
 }
-init_esm_shims2();
-init_esm_shims2();
-init_esm_shims2();
-init_esm_shims2();
-init_esm_shims2();
-init_esm_shims2();
-init_esm_shims2();
-init_esm_shims2();
-init_esm_shims2();
-init_esm_shims2();
 init_esm_shims2();
 var _a11;
 var _b11;
@@ -3396,9 +3372,13 @@ function callDevToolsPluginSetupFn(plugin, app) {
   }
   setupFn(api);
 }
-function registerDevToolsPlugin(app) {
-  if (target.__VUE_DEVTOOLS_KIT__REGISTERED_PLUGIN_APPS__.has(app) || devtoolsState.highPerfModeEnabled)
+function registerDevToolsPlugin(app, options) {
+  if (target.__VUE_DEVTOOLS_KIT__REGISTERED_PLUGIN_APPS__.has(app)) {
     return;
+  }
+  if (devtoolsState.highPerfModeEnabled && !(options == null ? void 0 : options.inspectingComponent)) {
+    return;
+  }
   target.__VUE_DEVTOOLS_KIT__REGISTERED_PLUGIN_APPS__.add(app);
   devtoolsPluginBuffer.forEach((plugin) => {
     callDevToolsPluginSetupFn(plugin, app);
@@ -3418,12 +3398,12 @@ var _a14;
 var _b14;
 (_b14 = (_a14 = target)[ROUTER_KEY]) != null ? _b14 : _a14[ROUTER_KEY] = {};
 var devtoolsRouterInfo = new Proxy(target[ROUTER_INFO_KEY], {
-  get(target22, property) {
+  get(target21, property) {
     return target[ROUTER_INFO_KEY][property];
   }
 });
 var devtoolsRouter = new Proxy(target[ROUTER_KEY], {
-  get(target22, property) {
+  get(target21, property) {
     if (property === "value") {
       return target[ROUTER_KEY];
     }
@@ -3570,7 +3550,7 @@ function createDevToolsApi(hooks2) {
     getComponentRenderCode(id) {
       const instance = getComponentInstance(activeAppRecord.value, id);
       if (instance)
-        return !((instance == null ? void 0 : instance.type) instanceof Function) ? instance.render.toString() : instance.type.toString();
+        return !(typeof (instance == null ? void 0 : instance.type) === "function") ? instance.render.toString() : instance.type.toString();
     },
     // scroll to component
     scrollToComponent(id) {
@@ -3581,14 +3561,14 @@ function createDevToolsApi(hooks2) {
     // get vue inspector
     getVueInspector: getComponentInspector,
     // toggle app
-    toggleApp(id) {
+    toggleApp(id, options) {
       const appRecord = devtoolsAppRecords.value.find((record) => record.id === id);
       if (appRecord) {
         setActiveAppRecordId(id);
         setActiveAppRecord(appRecord);
         normalizeRouterInfo(appRecord, activeAppRecord);
         callInspectorUpdatedHook();
-        registerDevToolsPlugin(appRecord.app);
+        registerDevToolsPlugin(appRecord.app, options);
       }
     },
     // inspect dom
@@ -3642,6 +3622,7 @@ var appRecordInfo = (_b17 = (_a17 = target).__VUE_DEVTOOLS_NEXT_APP_RECORD_INFO_
   id: 0,
   appIds: /* @__PURE__ */ new Set()
 };
+init_esm_shims2();
 function onDevToolsClientConnected(fn) {
   return new Promise((resolve) => {
     if (devtoolsState.connected && devtoolsState.clientConnected) {
@@ -3678,7 +3659,6 @@ function updateDevToolsClientDetected(params) {
 var _a18;
 var _b18;
 (_b18 = (_a18 = target).__VUE_DEVTOOLS_UPDATE_CLIENT_DETECTED__) != null ? _b18 : _a18.__VUE_DEVTOOLS_UPDATE_CLIENT_DETECTED__ = updateDevToolsClientDetected;
-init_esm_shims2();
 init_esm_shims2();
 init_esm_shims2();
 init_esm_shims2();
@@ -3996,7 +3976,7 @@ var classRule = compositeTransformation(isInstanceOfRegisteredClass, (clazz, sup
 }, (v, a, superJson) => {
   const clazz = superJson.classRegistry.getValue(a[1]);
   if (!clazz) {
-    throw new Error("Trying to deserialize unknown class - check https://github.com/blitz-js/superjson/issues/116#issuecomment-773996564");
+    throw new Error(`Trying to deserialize unknown class '${a[1]}' - check https://github.com/blitz-js/superjson/issues/116#issuecomment-773996564`);
   }
   return Object.assign(Object.create(clazz.prototype), v);
 });
@@ -4061,6 +4041,8 @@ var untransformValue = (json, type, superJson) => {
 };
 init_esm_shims2();
 var getNthKey = (value, n) => {
+  if (n > value.size)
+    throw new Error("index out of bounds");
   const keys = value.keys();
   while (n > 0) {
     keys.next();
@@ -4347,22 +4329,22 @@ function assignProp(carry, key, newVal, originalObject, includeNonenumerable) {
     });
   }
 }
-function copy(target22, options = {}) {
-  if (isArray2(target22)) {
-    return target22.map((item) => copy(item, options));
+function copy(target21, options = {}) {
+  if (isArray2(target21)) {
+    return target21.map((item) => copy(item, options));
   }
-  if (!isPlainObject3(target22)) {
-    return target22;
+  if (!isPlainObject3(target21)) {
+    return target21;
   }
-  const props = Object.getOwnPropertyNames(target22);
-  const symbols = Object.getOwnPropertySymbols(target22);
+  const props = Object.getOwnPropertyNames(target21);
+  const symbols = Object.getOwnPropertySymbols(target21);
   return [...props, ...symbols].reduce((carry, key) => {
     if (isArray2(options.props) && !options.props.includes(key)) {
       return carry;
     }
-    const val = target22[key];
+    const val = target21[key];
     const newVal = copy(val, options);
-    assignProp(carry, key, newVal, target22, options.nonenumerable);
+    assignProp(carry, key, newVal, target21, options.nonenumerable);
     return carry;
   }, {});
 }
@@ -4466,14 +4448,6 @@ init_esm_shims2();
 init_esm_shims2();
 init_esm_shims2();
 init_esm_shims2();
-init_esm_shims2();
-init_esm_shims2();
-init_esm_shims2();
-init_esm_shims2();
-init_esm_shims2();
-init_esm_shims2();
-init_esm_shims2();
-init_esm_shims2();
 var _a19;
 var _b19;
 (_b19 = (_a19 = target).__VUE_DEVTOOLS_KIT_MESSAGE_CHANNELS__) != null ? _b19 : _a19.__VUE_DEVTOOLS_KIT_MESSAGE_CHANNELS__ = [];
@@ -4492,9 +4466,6 @@ var _b23;
 var _a24;
 var _b24;
 (_b24 = (_a24 = target).__VUE_DEVTOOLS_KIT_BROADCAST_RPC_SERVER__) != null ? _b24 : _a24.__VUE_DEVTOOLS_KIT_BROADCAST_RPC_SERVER__ = null;
-init_esm_shims2();
-init_esm_shims2();
-init_esm_shims2();
 init_esm_shims2();
 init_esm_shims2();
 init_esm_shims2();
