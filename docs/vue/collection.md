@@ -263,3 +263,41 @@ export default class PostsCollection extends Collection {
   }
 }
 ```
+
+## State Management
+
+`getState()` manages the state of a collection as it does for the [Model](/vue/model#state-management): the collection
+is created the first time it is called, and every call after that returns the same instance, so its rows live beyond
+your components. A page opened again finds the rows (and the `state`) as it left them, and shows them while `get()` 
+fetches fresh ones.
+
+```vue
+<script lang="ts">
+import PostsCollection from './PostsCollection'
+
+export default defineComponent({
+  setup() {
+    return { posts: PostsCollection.getState() }
+  },
+  async created() {
+    // posts.data still has the previous rows until the response arrives
+    await this.posts.where({ author_id: 1 }).get()
+  }
+})
+</script>
+```
+
+Pass a key to keep one per, for instance, author: `PostsCollection.getState(String(authorId))`.
+`forgetState(key?)` clears the state of a key, or of all the class' instances without one, and `flushState()` clears 
+the state of every model and collection (it is called when the user logs out).
+
+::: warning
+The query (`where`, `sort`, `with`...) is kept with the instance, so set it on every visit. A filter applied the last 
+time the page was open is still there otherwise.
+:::
+
+::: tip
+A collection with state is not tied to the component that created it, so it does not leave its broadcast channel when that 
+component unmounts. Call `leaveChannel()` when the page is left, or let `forgetState()` and `flushState()` do it:
+they leave the channel of the collections they clear.
+:::
