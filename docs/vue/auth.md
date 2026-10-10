@@ -89,6 +89,9 @@ await auth.logout()
 
 The `loggedOut(payload)` observer is called on success and `logoutError(error)` if the request fails.
 
+On success it also calls `flushState()`, which clears the [state](/vue/model#state-management) kept by every model and 
+collection, so what was fetched for this user is not there for the next one. A failed logout keeps them.
+
 ## Available methods
 
 ### isAuthenticated

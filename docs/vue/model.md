@@ -235,6 +235,79 @@ useful to check if the model was modified:
 this.post.getOriginal().title // 'Title as it was last retrieved or saved'
 ```
 
+## State Management
+
+By default every `new Post()` is a new instance, so its state is lost with the component: a component that is created
+again starts empty and waits for the API. For state that should outlive your components, like the account you are 
+working on, keep it in the model itself with `getState()`. It creates the instance the first time it is called and 
+returns the same one on every call after that, so the model is your store, with no separate store to keep in sync:
+
+```ts
+// In any component, on any page
+const account = Account.getState()
+
+// Show what is already there, while fetching fresh data
+await account.refresh(1)
+```
+
+Because the state outlives the components, a page opened again finds the model (and its `state`) as it was left. 
+The user sees the previous data instead of an empty page while the request is running, and
+`state.isLoading` tells you when to show an indicator.
+
+```vue
+<template>
+    <q-card>
+        <q-linear-progress v-if="account.state.isLoading" indeterminate />
+        <q-card-section>{{ account.model.name }}</q-card-section>
+    </q-card>
+</template>
+
+<script lang="ts">
+import Account from './Account'
+
+export default defineComponent({
+  setup() {
+    return { account: Account.getState() }
+  },
+  async created() {
+    await this.account.refresh(1)
+  }
+})
+</script>
+```
+
+To keep more than one instance of the same class, e.g. one per account, pass a key:
+
+```ts
+const mine = Account.getState('U123')
+const other = Account.getState('U456')
+```
+
+Clear the state with `forgetState()`, so the next `getState()` starts from a new instance:
+
+```ts
+Account.forgetState('U123') // only this key
+Account.forgetState()       // every state of Account
+```
+
+To clear the state of every model and collection, use `flushState()`. `Auth.logout()` calls it for you, so the 
+next user does not see the data of the previous one.
+
+```ts
+import { flushState } from '@konnec/vue-eloquent'
+
+flushState()
+```
+
+::: warning
+The instance is created without arguments, so `getState()` fits models that are one known thing, not records built 
+from a payload. The state is global to the application: call `flushState()` between your tests.
+:::
+
+::: info
+The state is kept while the application is open. It is not saved to `localStorage`, so a page reload starts empty.
+:::
+
 ## Relationships
 
 You can create `hasOne` and `hasMany` relationships on your model:
